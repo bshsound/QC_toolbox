@@ -4,7 +4,7 @@
 function [flag] = Q04(filename,filepath,filesamplerate,deplsamplerate)
 
         if filesamplerate ~= deplsamplerate  
-            movefile([filepath filename], [filepath 'NoRealData04_' filename]);
+%             movefile([filepath filename], [filepath 'NoRealData04_' filename]);
                 flag = 1;
             else
                 flag = 0;

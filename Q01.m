@@ -12,7 +12,7 @@ try
             meanvalue = mean(data);
             flag = 0;
     catch
-            movefile([filepath filename], [filepath 'NoRealData01_' filename]);
+%             movefile([filepath filename], [filepath 'NoRealData01_' filename]);
             flag = 1;
 end
 end

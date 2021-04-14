@@ -3,7 +3,7 @@
 
 function [flag] = Q02(filename,filepath,filetime,DateDeployment)
     if filetime < DateDeployment    
-        movefile([filepath filename], [filepath 'NoRealData02_' filename]);
+%         movefile([filepath filename], [filepath 'NoRealData02_' filename]);
         flag = 1;
     else
         flag = 0;
