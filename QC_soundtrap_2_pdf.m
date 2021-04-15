@@ -14,7 +14,7 @@ clear all
 close all
 addpath('X:\Meereskunde\Unterwasserschall\HDF5_Testdaten_Skripte\Skripte\Matlabskripte\R2L');
 addpath('X:\Meereskunde\Unterwasserschall\HDF5_Testdaten_Skripte\Skripte\Matlabskripte\QC_toolbox');
-
+addpath('./libs/')
 %%
 tic
 %% Eingabe 
@@ -92,7 +92,7 @@ end
 filesize = flist(1).bytes;
 
 
-for kk = 2:3%length(flist)
+for kk = 1:3%length(flist)
     
     %% read timestamp from filename
     ftime(kk) = datetime(flist(kk).name(6:end-4),'InputFormat','yyMMddHHmmss');
@@ -129,7 +129,7 @@ for kk = 2:3%length(flist)
     Q_08(kk) = Q08(flist(kk).name,path,meanv(kk),0.01);
     
     %% QC_09: Check if file size differs from size of first file
-    Q_09(kk) = Q09(flist(kk).name,path,flist(kk).bytes,filesize,0.01);
+    Q_09(kk) = Q09(flist(kk).name,path,flist(kk).bytes,filesize,1);
     
     %% QC_10: Check if rms differs significantly in recordings - plot - limits
     
@@ -141,6 +141,12 @@ for kk = 2:3%length(flist)
     else
         Q_11(kk) = Q11(flist(kk).name,path,flist(kk-1).name,flist(kk+1).name,filedur,0.01,3);
     end
+    
+    %% QC_12: Check if time in filename is plausible
+    Q_12(kk) = Q12(flist(kk).name,path);
+    
+    %% QC_13: Check if data is stationary
+    Q_13(kk) = Q13(data{kk},sr(kk),60);
     
     
     
