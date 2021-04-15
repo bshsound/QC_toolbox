@@ -154,17 +154,13 @@ for kk = 1:3%length(flist)
     % therefore outside the loop 
     clear data
     end
-    else
-        Q_02(kk)=0;Q_03(kk)=0;Q_04(kk)=0;Q_05(kk)=0;Q_06(kk)=0;Q_07(kk)=0; ...
-            Q_08(kk)=0;Q_09(kk)=0;Q_10(kk)=0;Q_11(kk)=0;Q_12(kk)=0;Q_13(kk)=0;
-        
     progressbar(kk/length(flist))
 end
     %% QC_10: Check if rms differs significantly in recordings - plot - limits
     Q_10 = Q10(stdrms,2);
     
     %% QC_14: Check if everything is okay is performed after QC_10 and is 
-    Q_14 = Q14([Q_01;Q_02;Q_03;Q_04;Q_05;Q_06;Q_07;Q_08;Q_09;Q_10;Q_11;Q_12;Q_13]')
+    Q_14 = Q14([Q_01,Q_01,Q_01,Q_01,Q_01,Q_01,Q_01,Q_01,Q_01,Q_01,Q_01,Q_01,Q_01])
     
     
 

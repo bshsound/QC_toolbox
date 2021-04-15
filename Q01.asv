@@ -45,9 +45,8 @@ try
             standarddeviation = std(data);
             meanvalue = mean(data);
             flag = 0;
-catch %e
+catch e
 %             movefile([filepath filename], [filepath 'NoRealData01_' filename]);
-%             disp(['There was an error! The message was:\n%s',e.message]);
             info = [];
             data = [];
             samplerate = NaN;
