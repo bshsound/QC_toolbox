@@ -1,18 +1,9 @@
-% Quality Check 14: Check if following files are either twice as loud or
-% quiet as the predecessing files
+% Quality Check 14: Check sum of quality flags - files with 0 quality flags
+% are assumed to be flawless and get assigned QC14 = 1 - all is good
 
-function [flag] = Q14(filestdrms,limit)
-    for ii = 1:length(filestdrms)
-        if ii==1
-            if filestdrms(ii) > limit*filestdrms(ii+1) || filestdrms(ii) < filestdrms(ii+1)/limit
-                flag(ii) = 1;
-            else
-                flag(ii) = 0;
-            end
-        elseif filestdrms(ii) > limit*filestdrms(ii-1) || filestdrms(ii) < filestdrms(ii-1)/limit
-            flag(ii) = 1;
-        else
-            flag(ii) = 0;
-        end
-    end
+function [flag] = Q14(QCs)
+    flag(1:size(QCs,1)) = 1;
+    flagsum = sum(QCs,2);
+    [idx,~] = find(flagsum>0)
+    flag(idx) = 0; % something is wrong
 end
