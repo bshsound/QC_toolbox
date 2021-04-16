@@ -27,6 +27,11 @@ classdef test_exported < matlab.apps.AppBase
         SelectpathButton_2            matlab.ui.control.Button
         QClogpathEditFieldLabel       matlab.ui.control.Label
         QClogpathEditField            matlab.ui.control.EditField
+        HourSpinnerLabel              matlab.ui.control.Label
+        HourSpinner                   matlab.ui.control.Spinner
+        HourSpinner_2Label            matlab.ui.control.Label
+        HourSpinner_2                 matlab.ui.control.Spinner
+        RUNButton                     matlab.ui.control.Button
     end
 
     % Callbacks that handle component events
@@ -35,22 +40,62 @@ classdef test_exported < matlab.apps.AppBase
         % Button pushed function: SelectpathButton
         function SelectpathButtonPushed(app, event)
             path = uigetdir('X:\Meereskunde\Unterwasserschall-Archiv\');
+            if path(end) ~= '\'
+                path = append(path,'\');
+            end
+            assignin('base',"path",path)
+            hObject.path = path;
         end
 
         % Value changed function: DeploymentDatePicker
         function DeploymentDatePickerValueChanged(app, event)
             DateDeployment = app.DeploymentDatePicker.Value; 
+            assignin('base',"DateDeployment",DateDeployment)
         end
 
         % Value changed function: StationnameDropDown
         function StationnameDropDownValueChanged(app, event)
-            Station = app.StationnameDropDown.Value;
-            
+            station = app.StationnameDropDown.Value;
+            assignin('base',"station",station)
         end
 
         % Button pushed function: SelectpathButton_2
         function SelectpathButton_2Pushed(app, event)
            qc_path = uigetdir('X:\Meereskunde\Unterwasserschall\AMSO23\');
+           assignin('base',"qc_path",qc_path)
+        end
+
+        % Value changed function: PathEditField
+        function PathEditFieldValueChanged(app, event)
+                path = app.PathEditField.Value;
+                assignin('base',"path",path)
+        end
+
+        % Value changed function: QClogpathEditField
+        function QClogpathEditFieldValueChanged(app, event)
+            qc_path = app.QClogpathEditField.Value;
+            assignin('base',"qc_path",qc_path)
+        end
+
+        % Value changed function: RecoveryDatePicker
+        function RecoveryDatePickerValueChanged(app, event)
+            DateRecovery = app.RecoveryDatePicker.Value;
+            assignin('base',"DateDeployment",DateDeployment)
+        end
+
+        % Value changed function: FileDurationEditField
+        function FileDurationEditFieldValueChanged(app, event)
+            filedur = app.FileDurationEditField.Value;
+            assignin('base',"filedur",filedur)
+        end
+
+        % Button pushed function: GetfromfirstfileButton
+        function GetfromfirstfileButtonPushed(app, event)
+            flist = dir([hObject.path '*.wav']);
+            filedur = audioinfo([hObject.path flist(1).name]).Duration;
+            assignin('base',"filedur",filedur)
+            app.FileDurationEditField.Value = filedur;
+%             filedur = app.FileDurationEditField.Value;
         end
     end
 
@@ -63,19 +108,20 @@ classdef test_exported < matlab.apps.AppBase
             % Create UIFigure and hide until all components are created
             app.UIFigure = uifigure('Visible', 'off');
             app.UIFigure.Color = [0.9686 0.4392 0.9686];
-            app.UIFigure.Position = [100 100 640 480];
+            app.UIFigure.Position = [100 100 447 490];
             app.UIFigure.Name = 'UI Figure';
+            app.UIFigure.Resize = 'off';
 
             % Create Image
             app.Image = uiimage(app.UIFigure);
-            app.Image.Position = [506 346 100 100];
+            app.Image.Position = [230 118 100 119];
             app.Image.ImageSource = 'index.png';
 
             % Create DutyCyclePanel
             app.DutyCyclePanel = uipanel(app.UIFigure);
             app.DutyCyclePanel.Title = 'Duty Cycle';
             app.DutyCyclePanel.BackgroundColor = [0.9686 0.4392 0.9686];
-            app.DutyCyclePanel.Position = [21 95 211 119];
+            app.DutyCyclePanel.Position = [15 118 211 119];
 
             % Create DutyCycleSwitchLabel
             app.DutyCycleSwitchLabel = uilabel(app.DutyCyclePanel);
@@ -113,7 +159,7 @@ classdef test_exported < matlab.apps.AppBase
             app.SettingsPanel = uipanel(app.UIFigure);
             app.SettingsPanel.Title = 'Settings';
             app.SettingsPanel.BackgroundColor = [0.9686 0.4392 0.9686];
-            app.SettingsPanel.Position = [14 239 316 234];
+            app.SettingsPanel.Position = [14 249 411 234];
 
             % Create PathEditFieldLabel
             app.PathEditFieldLabel = uilabel(app.SettingsPanel);
@@ -123,7 +169,9 @@ classdef test_exported < matlab.apps.AppBase
 
             % Create PathEditField
             app.PathEditField = uieditfield(app.SettingsPanel, 'text');
+            app.PathEditField.ValueChangedFcn = createCallbackFcn(app, @PathEditFieldValueChanged, true);
             app.PathEditField.Position = [89 180 100 22];
+            app.PathEditField.Value = 'X:\Meereskunde\Unterwasserschall-Archiv\Import02\TEST\';
 
             % Create SelectpathButton
             app.SelectpathButton = uibutton(app.SettingsPanel, 'push');
@@ -139,6 +187,7 @@ classdef test_exported < matlab.apps.AppBase
 
             % Create DeploymentDatePicker
             app.DeploymentDatePicker = uidatepicker(app.SettingsPanel);
+            app.DeploymentDatePicker.Limits = [datetime([2013 1 12]) datetime([2099 12 31])];
             app.DeploymentDatePicker.ValueChangedFcn = createCallbackFcn(app, @DeploymentDatePickerValueChanged, true);
             app.DeploymentDatePicker.Position = [89 117 150 22];
 
@@ -150,7 +199,8 @@ classdef test_exported < matlab.apps.AppBase
 
             % Create RecoveryDatePicker
             app.RecoveryDatePicker = uidatepicker(app.SettingsPanel);
-            app.RecoveryDatePicker.Position = [89 86 104 22];
+            app.RecoveryDatePicker.ValueChangedFcn = createCallbackFcn(app, @RecoveryDatePickerValueChanged, true);
+            app.RecoveryDatePicker.Position = [89 86 150 22];
 
             % Create StationnameDropDownLabel
             app.StationnameDropDownLabel = uilabel(app.SettingsPanel);
@@ -173,10 +223,15 @@ classdef test_exported < matlab.apps.AppBase
 
             % Create FileDurationEditField
             app.FileDurationEditField = uieditfield(app.SettingsPanel, 'numeric');
+            app.FileDurationEditField.Limits = [0 Inf];
+            app.FileDurationEditField.ValueChangedFcn = createCallbackFcn(app, @FileDurationEditFieldValueChanged, true);
+            app.FileDurationEditField.Tooltip = {'Duration of each recording in seconds'};
             app.FileDurationEditField.Position = [93 19 104 22];
+            app.FileDurationEditField.Value = 3600;
 
             % Create GetfromfirstfileButton
             app.GetfromfirstfileButton = uibutton(app.SettingsPanel, 'push');
+            app.GetfromfirstfileButton.ButtonPushedFcn = createCallbackFcn(app, @GetfromfirstfileButtonPushed, true);
             app.GetfromfirstfileButton.Position = [206 19 104 22];
             app.GetfromfirstfileButton.Text = 'Get from first file';
 
@@ -194,7 +249,38 @@ classdef test_exported < matlab.apps.AppBase
 
             % Create QClogpathEditField
             app.QClogpathEditField = uieditfield(app.SettingsPanel, 'text');
+            app.QClogpathEditField.ValueChangedFcn = createCallbackFcn(app, @QClogpathEditFieldValueChanged, true);
             app.QClogpathEditField.Position = [89 146 100 22];
+            app.QClogpathEditField.Value = 'X:\Meereskunde\Unterwasserschall\AMSO23\NORDSEE\ES1\QC\Test\';
+
+            % Create HourSpinnerLabel
+            app.HourSpinnerLabel = uilabel(app.SettingsPanel);
+            app.HourSpinnerLabel.HorizontalAlignment = 'right';
+            app.HourSpinnerLabel.Position = [264 117 32 22];
+            app.HourSpinnerLabel.Text = 'Hour';
+
+            % Create HourSpinner
+            app.HourSpinner = uispinner(app.SettingsPanel);
+            app.HourSpinner.Limits = [0 24];
+            app.HourSpinner.Position = [311 117 100 22];
+
+            % Create HourSpinner_2Label
+            app.HourSpinner_2Label = uilabel(app.SettingsPanel);
+            app.HourSpinner_2Label.HorizontalAlignment = 'right';
+            app.HourSpinner_2Label.Position = [265 86 32 22];
+            app.HourSpinner_2Label.Text = 'Hour';
+
+            % Create HourSpinner_2
+            app.HourSpinner_2 = uispinner(app.SettingsPanel);
+            app.HourSpinner_2.Limits = [0 24];
+            app.HourSpinner_2.Position = [312 86 100 22];
+
+            % Create RUNButton
+            app.RUNButton = uibutton(app.UIFigure, 'push');
+            app.RUNButton.FontSize = 66;
+            app.RUNButton.FontWeight = 'bold';
+            app.RUNButton.Position = [47 20 179 89];
+            app.RUNButton.Text = 'RUN';
 
             % Show the figure after all components are created
             app.UIFigure.Visible = 'on';
