@@ -185,7 +185,7 @@ newcell={...
             delete([QClog_ordner name]);
         end
     end
+    %% Write variables to m folder
+save([qc_path 'mat_files\' station '_' yy '_' mm '_qc_data.mat'],'DateDeployment','DateRecovery','duration','DutyCycle','filedur','ftime','meanv','path','QC','sr','station','stdrms','ts');
 end
 
-%% Write variables to m folder
-save([qc_path 'mat_files\' station '_' yy '_' mm '_qc_data.mat'],'DateDeployment','DateRecovery','duration','DutyCycle','filedur','ftime','meanv','path','QC','sr','station','stdrms','ts');
