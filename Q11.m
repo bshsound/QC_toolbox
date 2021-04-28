@@ -1,6 +1,9 @@
 % Quality Check 11: Check for gaps between recordings
 
-function [flag] = Q11(filename,filepath,filename_bef,filename_aft,duration,limit,index)
+function [flag] = Q11(filename,filepath,filename_bef,filename_aft,duration,interval,limit,index)
+if interval ~= 0
+    duration = duration + interval;
+end
 if index == 1
     t = datetime(filename(6:end-4),'InputFormat','yyMMddHHmmss');
     t_after = datetime(filename_aft(6:end-4),'InputFormat','yyMMddHHmmss');

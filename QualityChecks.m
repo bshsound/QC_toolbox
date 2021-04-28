@@ -1,8 +1,8 @@
 %% Function, that comprises all quality checks
-function [QC,duration,meanv,sr,stdrms,ts,ftime] = QualityChecks(path_in,depl,recov,filedur)
+function [QC,duration,meanv,sr,stdrms,ts,ftime] = QualityChecks(path_in,depl,recov,filedur,interval)
 %% add libs
 addpath('./libs/')
-
+tic
 %% Scan for all .wav files in path_in_in
 flist = dir([path_in '*.wav']);
 
@@ -86,11 +86,11 @@ for kk = 1:length(flist)
     
     %% QC_11: Check for gap between recordings
     if kk==1
-        Q_11(kk) = Q11(flist(kk).name,path_in,[],flist(kk+1).name,filedur,0.01,1);
+        Q_11(kk) = Q11(flist(kk).name,path_in,[],flist(kk+1).name,filedur,interval,0.01,1);
     elseif kk==length(flist)
-        Q_11(kk) = Q11(flist(kk).name,path_in,flist(kk-1).name,[],filedur,0.01,2);
+        Q_11(kk) = Q11(flist(kk).name,path_in,flist(kk-1).name,[],filedur,interval,0.01,2);
     else
-        Q_11(kk) = Q11(flist(kk).name,path_in,flist(kk-1).name,flist(kk+1).name,filedur,0.01,3);
+        Q_11(kk) = Q11(flist(kk).name,path_in,flist(kk-1).name,flist(kk+1).name,filedur,interval,0.01,3);
     end
     
     %% QC_12: Check if time in filename is plausible

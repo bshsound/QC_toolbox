@@ -26,13 +26,13 @@ DutyCycle = 0;
 
 if DutyCycle == 1
     prompt = 'Es wird alle ... Minuten gemessen ?';
-    DutyCycleAbstand = minutes(input(prompt));
+    interval = minutes(input(prompt));
     prompt = 'Eine Aufnahme dauert ... Minuten ?';
-    DutyCycleDauer = minutes(input(prompt));
+    filedur = minutes(input(prompt));
 end
 
 %% CALCULATE QCs
-[QC,duration,meanv,sr,stdrms,ts,ftime] = QualityChecks(path,DateDeployment,DateRecovery,filedur);
+[QC,duration,meanv,sr,stdrms,ts,ftime] = QualityChecks(path,DateDeployment,DateRecovery,filedur,interval);
 
 %% OUTPUT OF QC-LOG TO PDF
 qc2pdf(QC,duration,meanv,sr,stdrms,ts,ftime,path,qc_path,station,DateDeployment)

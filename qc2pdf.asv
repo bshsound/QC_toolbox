@@ -7,10 +7,9 @@ function [] = qc2pdf(QC,duration,meanv,sr,stdrms,ts,ftime,path,qc_path,station,D
     yy = num2str(year(DateD));
     mm = num2str(month(DateD),'%02d');
     QClog=[qc_path 'Logs\' station '_' yy '_' mm '_' 'qclog.tex'];
-    QC_mat_folder = [qc_path 'mat_files\'];
+    QC_mat_
     QClog_ordner = [qc_path 'Logs\'];
     mkdir(QClog_ordner);
-    mkdir(QC_mat_folder);
     %% delete QClog if file of same name already exists
     if isfile(QClog)
          delete(QClog);
