@@ -1,4 +1,5 @@
 %% function, that writes qc results to pdf
+
 function [] = qc2pdf(QC,duration,meanv,sr,stdrms,ts,ftime,path,qc_path,station,DateD,DateR,filedur)
     %% add path to R2L toolbox
     addpath('.\libs\R2L');
@@ -125,7 +126,7 @@ figure1 = figure(...
         %% Export image
         figname = [qc_path '\Logs\1.png'];
         print(gcf,figname,'-dpng','-r300');
-        savefig([qc_path 'mat_files\' station '_' yy '_' mm 'qc_plots.fig']);
+        savefig([qc_path 'mat_files\' station '_' yy '_' mm '_qc_plots.fig']);
         clf;
         
 newcell={...
@@ -186,6 +187,6 @@ newcell={...
         end
     end
     %% Write variables to m folder
-save([qc_path 'mat_files\' station '_' yy '_' mm '_qc_data.mat'],'DateDeployment','DateRecovery','duration','DutyCycle','filedur','ftime','meanv','path','QC','sr','station','stdrms','ts');
+save([qc_path 'mat_files\' station '_' yy '_' mm '_qc_data.mat'],'DateD','DateR','duration','filedur','ftime','meanv','path','QC','sr','station','stdrms','ts');
 end
 
