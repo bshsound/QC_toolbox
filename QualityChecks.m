@@ -1,7 +1,7 @@
 %% Function, that comprises all quality checks
 function [QC,duration,meanv,sr,stdrms,ts,ftime] = QualityChecks(path_in,depl,recov,filedur,interval)
 %% add libs
-addpath('./libs/')
+addpath('X:\Meereskunde\Unterwasserschall\HDF5_Testdaten_Skripte\Skripte\Matlabskripte\QC_toolbox\libs\')
 tic
 %% Scan for all .wav files in path_in_in
 flist = dir([path_in '*.wav']);
