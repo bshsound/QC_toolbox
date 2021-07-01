@@ -19,7 +19,8 @@ function R2L_compile(texfilename)
 
 
 pdflatexpath='C:\miktex-portable\texmfs\install\miktex\bin\x64\pdflatex.exe  ';
-pdflatexarguments='-max-print-line=120 -interaction=nonstopmode  ';
+pdflatexarguments= '--enable-write18 --extra-mem-bot=10000000 --synctex=1 -max-print-line=120 -interaction=nonstopmode  ';
+% pdflatexarguments='-max-print-line=120 -interaction=nonstopmode  ';
 
 system([pdflatexpath, pdflatexarguments, texfilename])
 system([pdflatexpath, pdflatexarguments, texfilename])

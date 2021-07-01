@@ -76,8 +76,7 @@ for kk = 1:length(flist)
     %% QC_07: Check if duration is shorter - is performed after loop
     Q_07(kk) = Q07(flist(kk).name,path_in,duration(kk),filedur,0.01);
     
-    %% QC_08: Check if recording suffers from DC-offset :(
-    Q_08(kk) = Q08(flist(kk).name,path_in,meanv(kk),0.01);
+    %% QC_08: Check if recording suffers from DC-offset :( -> moved after loop(28.06.21)
     
     %% QC_09: Check if file size differs from size of first file
     Q_09(kk) = Q09(flist(kk).name,path_in,flist(kk).bytes,filesize,1);
@@ -110,7 +109,10 @@ for kk = 1:length(flist)
     progressbar(kk/length(flist))
 end
     %% QC_10: Check if rms differs significantly in recordings - plot - limits
-    Q_10 = Q10(stdrms,2);
+    Q_10 = Q10(stdrms,10);
+    
+    %% Check if DC Offset leads to differences in levels > 1 dB
+    Q_08 = Q08(Q_02,meanv,3);
     
     %% QC_14: Check if everything is okay is performed after QC_10 and is 
     Q_14 = Q14([Q_01;Q_02;Q_03;Q_04;Q_05;Q_06;Q_07;Q_08;Q_09;Q_10;Q_11;Q_12;Q_13]')

@@ -6,8 +6,6 @@ classdef test_exported < matlab.apps.AppBase
         TabGroup                      matlab.ui.container.TabGroup
         QCTab                         matlab.ui.container.Tab
         SettingsPanel                 matlab.ui.container.Panel
-        PathEditFieldLabel            matlab.ui.control.Label
-        PathEditField                 matlab.ui.control.EditField
         SelectpathButton              matlab.ui.control.Button
         DeploymentDatePickerLabel     matlab.ui.control.Label
         DeploymentDatePicker          matlab.ui.control.DatePicker
@@ -17,10 +15,10 @@ classdef test_exported < matlab.apps.AppBase
         StationnameDropDown           matlab.ui.control.DropDown
         FileDurationEditFieldLabel    matlab.ui.control.Label
         FileDurationEditField         matlab.ui.control.NumericEditField
+        Lamp_7                        matlab.ui.control.Lamp
+        Lamp_6                        matlab.ui.control.Lamp
         GetfromfirstfileButton        matlab.ui.control.Button
-        SelectpathButton_2            matlab.ui.control.Button
-        QClogpathEditFieldLabel       matlab.ui.control.Label
-        QClogpathEditField            matlab.ui.control.EditField
+        SelectQCpathButton            matlab.ui.control.Button
         HourSpinnerLabel              matlab.ui.control.Label
         HourSpinner                   matlab.ui.control.Spinner
         HourSpinner_2Label            matlab.ui.control.Label
@@ -34,6 +32,13 @@ classdef test_exported < matlab.apps.AppBase
         IntervalEditField             matlab.ui.control.NumericEditField
         Image                         matlab.ui.control.Image
         RUNButton                     matlab.ui.control.Button
+        AddPrefixesButton             matlab.ui.control.Button
+        ViewLogFileButton             matlab.ui.control.Button
+        RemovePrefixesButton          matlab.ui.control.Button
+        GetdatetimePanel_2            matlab.ui.container.Panel
+        FiledateEditField_2Label      matlab.ui.control.Label
+        FiledateEditField_2           matlab.ui.control.EditField
+        TEXT_2                        matlab.ui.control.Label
         Copy2ArchiveTab               matlab.ui.container.Tab
         SettingsPanel_2               matlab.ui.container.Panel
         SeaDropDownLabel              matlab.ui.control.Label
@@ -46,9 +51,9 @@ classdef test_exported < matlab.apps.AppBase
         SettargetdirectoryButton      matlab.ui.control.Button
         Lamp                          matlab.ui.control.Lamp
         Lamp2                         matlab.ui.control.Lamp
+        Lamp_3                        matlab.ui.control.Lamp
         Lamp_4                        matlab.ui.control.Lamp
         Lamp_5                        matlab.ui.control.Lamp
-        Lamp_3                        matlab.ui.control.Lamp
         COPYButton                    matlab.ui.control.Button
         ControlPanel                  matlab.ui.container.Panel
         FiledateoffirstfileiscorrectCheckBox  matlab.ui.control.CheckBox
@@ -59,12 +64,15 @@ classdef test_exported < matlab.apps.AppBase
         FiledateEditField             matlab.ui.control.EditField
         TEXT                          matlab.ui.control.Label
         CalibrationTab                matlab.ui.container.Tab
+        gjhkDropDownLabel             matlab.ui.control.Label
+        gjhkDropDown                  matlab.ui.control.DropDown
+        HTML                          matlab.ui.control.HTML
     end
 
     
     properties (Access = private)
         path = 'X:\Meereskunde\Unterwasserschall-Archiv\Import02\TEST\'% Path to raw .wav files
-        qc_path = 'X:\Meereskunde\Unterwasserschall\AMSO23\NORDSEE\ES1\QC\Logs\' % path, where qc-log as pdf should be stored
+        qc_path = 'X:\Meereskunde\Unterwasserschall\AMSO23\NORDSEE\ES1\QC\' % path, where qc-log as pdf should be stored
         DateDeployment = datetime(2013,12,1);
         DateDeploymentHour = 0;
         DateRecovery = datetime(now,'ConvertFrom','datenum');
@@ -87,6 +95,8 @@ classdef test_exported < matlab.apps.AppBase
         yy
         mm
         dd% Description
+        log % Description
+        libpath = addpath('./libs') % adds path to index picture
     end
     
 
@@ -96,11 +106,15 @@ classdef test_exported < matlab.apps.AppBase
         % Button pushed function: SelectpathButton
         function SelectpathButtonPushed(app, event)
             filepath = uigetdir('X:\Meereskunde\Unterwasserschall-Archiv\');
+            drawnow;
+            figure(app.UIFigure)
             if filepath(end) ~= '\'
                 filepath = append(filepath,'\');
             end
 %             assignin('base',"path",path)
             app.path = filepath;
+            set(app.RemovePrefixesButton, 'Enable', 'on')
+            app.Lamp_6.Color = 'g';
         end
 
         % Value changed function: DeploymentDatePicker
@@ -117,17 +131,20 @@ classdef test_exported < matlab.apps.AppBase
             app.station = station;
         end
 
-        % Button pushed function: SelectpathButton_2
-        function SelectpathButton_2Pushed(app, event)
+        % Button pushed function: SelectQCpathButton
+        function SelectQCpathButtonPushed(app, event)
            qc_path = uigetdir('X:\Meereskunde\Unterwasserschall\AMSO23\');
+           drawnow;
+           figure(app.UIFigure)
 %            assignin('base',"qc_path",qc_path)
             if qc_path(end) ~= '\'
                 qc_path = append(qc_path,'\');
             end
             app.qc_path = qc_path;
+            app.Lamp_7.Color = 'g';
         end
 
-        % Value changed function: PathEditField
+        % Callback function
         function PathEditFieldValueChanged(app, event)
                 filepath = app.PathEditField.Value;
 %                 assignin('base',"path",path);
@@ -137,7 +154,7 @@ classdef test_exported < matlab.apps.AppBase
                 app.path = path;
         end
 
-        % Value changed function: QClogpathEditField
+        % Callback function
         function QClogpathEditFieldValueChanged(app, event)
             qc_path = app.QClogpathEditField.Value;
 %             assignin('base',"qc_path",qc_path)
@@ -167,6 +184,7 @@ classdef test_exported < matlab.apps.AppBase
             filedur = audioinfo([app.path flist(1).name]).Duration;
 %             assignin('base',"filedur",filedur)
             app.FileDurationEditField.Value = filedur;
+            app.filedur=filedur;
 %             filedur = app.FileDurationEditField.Value;
         end
 
@@ -188,8 +206,12 @@ classdef test_exported < matlab.apps.AppBase
             DateR = datetime(app.DateRecovery)+hours(app.DateRecoveryHour);
             disp('Now performing Quality Control ...')
             [app.QC,app.duration,app.meanv,app.sr,app.stdrms,app.ts,app.ftime] = QualityChecks(app.path,DateD,DateR,app.filedur,app.interval);
+            
             disp('Writing results to output pdf ... ')
-            qc2pdf(app.QC,app.duration,app.meanv,app.sr,app.stdrms,app.ts,app.ftime,app.path,app.qc_path,app.station,DateD,DateR,app.filedur)
+            [app.log] = qc2pdf(app.QC,app.duration,app.meanv,app.sr,app.stdrms,app.ts,app.ftime,app.path,app.qc_path,app.station,DateD,DateR,app.filedur)
+            set(app.ViewLogFileButton, 'Enable', 'on')
+            set(app.AddPrefixesButton, 'Enable', 'on')
+            
         end
 
         % Callback function
@@ -303,6 +325,22 @@ classdef test_exported < matlab.apps.AppBase
                 app.COPYButton.Enable = 'Off';
             end
         end
+
+        % Button pushed function: ViewLogFileButton
+        function ViewLogFileButtonPushed(app, event)
+%             rptview(app.log,'pdf')
+winopen(app.log)
+        end
+
+        % Button pushed function: AddPrefixesButton
+        function AddPrefixesButtonPushed(app, event)
+addQCprefix(app.QC,app.path)
+        end
+
+        % Button pushed function: RemovePrefixesButton
+        function RemovePrefixesButtonPushed(app, event)
+removeQCprefix(app.path)            
+        end
     end
 
     % Component initialization
@@ -314,13 +352,13 @@ classdef test_exported < matlab.apps.AppBase
             % Create UIFigure and hide until all components are created
             app.UIFigure = uifigure('Visible', 'off');
             app.UIFigure.Color = [0.0745 0.6235 1];
-            app.UIFigure.Position = [600 400 324 490];
+            app.UIFigure.Position = [600 400 329 631];
             app.UIFigure.Name = 'UI Figure';
             app.UIFigure.Resize = 'off';
 
             % Create TabGroup
             app.TabGroup = uitabgroup(app.UIFigure);
-            app.TabGroup.Position = [1 1 324 490];
+            app.TabGroup.Position = [1 1 329 631];
 
             % Create QCTab
             app.QCTab = uitab(app.TabGroup);
@@ -332,28 +370,13 @@ classdef test_exported < matlab.apps.AppBase
             app.SettingsPanel.ForegroundColor = [1 1 1];
             app.SettingsPanel.Title = 'Settings';
             app.SettingsPanel.BackgroundColor = [0 0.3294 0.6];
-            app.SettingsPanel.Position = [16 236 295 217];
-
-            % Create PathEditFieldLabel
-            app.PathEditFieldLabel = uilabel(app.SettingsPanel);
-            app.PathEditFieldLabel.HorizontalAlignment = 'right';
-            app.PathEditFieldLabel.FontColor = [1 1 1];
-            app.PathEditFieldLabel.Position = [12 163 30 22];
-            app.PathEditFieldLabel.Text = 'Path';
-
-            % Create PathEditField
-            app.PathEditField = uieditfield(app.SettingsPanel, 'text');
-            app.PathEditField.ValueChangedFcn = createCallbackFcn(app, @PathEditFieldValueChanged, true);
-            app.PathEditField.FontColor = [0.149 0.149 0.149];
-            app.PathEditField.Tooltip = {'Enter path to raw .wav files'};
-            app.PathEditField.Position = [89 163 100 22];
-            app.PathEditField.Value = 'X:\Meereskunde\Unterwasserschall-Archiv\Import02\TEST\';
+            app.SettingsPanel.Position = [16 377 295 217];
 
             % Create SelectpathButton
             app.SelectpathButton = uibutton(app.SettingsPanel, 'push');
             app.SelectpathButton.ButtonPushedFcn = createCallbackFcn(app, @SelectpathButtonPushed, true);
             app.SelectpathButton.Tooltip = {'select path to raw .wav files'};
-            app.SelectpathButton.Position = [199 163 75 22];
+            app.SelectpathButton.Position = [8 158 75 22];
             app.SelectpathButton.Text = 'Select path';
 
             % Create DeploymentDatePickerLabel
@@ -393,11 +416,11 @@ classdef test_exported < matlab.apps.AppBase
 
             % Create StationnameDropDown
             app.StationnameDropDown = uidropdown(app.SettingsPanel);
-            app.StationnameDropDown.Items = {'ES1', 'FN1', 'FN3', ''};
+            app.StationnameDropDown.Items = {'Select Staion', 'ES1', 'FN1', 'FN3'};
             app.StationnameDropDown.ValueChangedFcn = createCallbackFcn(app, @StationnameDropDownValueChanged, true);
             app.StationnameDropDown.Tooltip = {'select hyfrophone station'};
-            app.StationnameDropDown.Position = [92 39 70 22];
-            app.StationnameDropDown.Value = 'ES1';
+            app.StationnameDropDown.Position = [92 39 106 22];
+            app.StationnameDropDown.Value = 'Select Staion';
 
             % Create FileDurationEditFieldLabel
             app.FileDurationEditFieldLabel = uilabel(app.SettingsPanel);
@@ -421,27 +444,12 @@ classdef test_exported < matlab.apps.AppBase
             app.GetfromfirstfileButton.Position = [182 10 104 22];
             app.GetfromfirstfileButton.Text = 'Get from first file';
 
-            % Create SelectpathButton_2
-            app.SelectpathButton_2 = uibutton(app.SettingsPanel, 'push');
-            app.SelectpathButton_2.ButtonPushedFcn = createCallbackFcn(app, @SelectpathButton_2Pushed, true);
-            app.SelectpathButton_2.Tooltip = {'select path, where qc-log  .pdf shall be stored'};
-            app.SelectpathButton_2.Position = [199 129 75 22];
-            app.SelectpathButton_2.Text = 'Select path';
-
-            % Create QClogpathEditFieldLabel
-            app.QClogpathEditFieldLabel = uilabel(app.SettingsPanel);
-            app.QClogpathEditFieldLabel.HorizontalAlignment = 'right';
-            app.QClogpathEditFieldLabel.FontColor = [1 1 1];
-            app.QClogpathEditFieldLabel.Position = [1 129 67 22];
-            app.QClogpathEditFieldLabel.Text = 'QClog-path';
-
-            % Create QClogpathEditField
-            app.QClogpathEditField = uieditfield(app.SettingsPanel, 'text');
-            app.QClogpathEditField.ValueChangedFcn = createCallbackFcn(app, @QClogpathEditFieldValueChanged, true);
-            app.QClogpathEditField.FontColor = [0.149 0.149 0.149];
-            app.QClogpathEditField.Tooltip = {'enter path, where qc-log  .pdf shall be stored'};
-            app.QClogpathEditField.Position = [89 129 100 22];
-            app.QClogpathEditField.Value = 'X:\Meereskunde\Unterwasserschall\AMSO23\NORDSEE\ES1\QC\Test\';
+            % Create SelectQCpathButton
+            app.SelectQCpathButton = uibutton(app.SettingsPanel, 'push');
+            app.SelectQCpathButton.ButtonPushedFcn = createCallbackFcn(app, @SelectQCpathButtonPushed, true);
+            app.SelectQCpathButton.Tooltip = {'select path, where qc-log  .pdf shall be stored'};
+            app.SelectQCpathButton.Position = [8 129 104 22];
+            app.SelectQCpathButton.Text = 'Select QC - path';
 
             % Create HourSpinnerLabel
             app.HourSpinnerLabel = uilabel(app.SettingsPanel);
@@ -471,12 +479,22 @@ classdef test_exported < matlab.apps.AppBase
             app.HourSpinner_2.Tooltip = {'select hour of the day (0-24), when hydrophone was recovered'};
             app.HourSpinner_2.Position = [235 69 45 22];
 
+            % Create Lamp_6
+            app.Lamp_6 = uilamp(app.SettingsPanel);
+            app.Lamp_6.Position = [120 158 20 20];
+            app.Lamp_6.Color = [1 0 0];
+
+            % Create Lamp_7
+            app.Lamp_7 = uilamp(app.SettingsPanel);
+            app.Lamp_7.Position = [120 130 20 20];
+            app.Lamp_7.Color = [1 0 0];
+
             % Create DutyCyclePanel
             app.DutyCyclePanel = uipanel(app.QCTab);
             app.DutyCyclePanel.ForegroundColor = [1 1 1];
             app.DutyCyclePanel.Title = 'Duty Cycle';
             app.DutyCyclePanel.BackgroundColor = [0 0.3294 0.6];
-            app.DutyCyclePanel.Position = [17 106 175 119];
+            app.DutyCyclePanel.Position = [16 150 179 119];
 
             % Create DutyCycleSwitchLabel
             app.DutyCycleSwitchLabel = uilabel(app.DutyCyclePanel);
@@ -525,7 +543,7 @@ classdef test_exported < matlab.apps.AppBase
 
             % Create Image
             app.Image = uiimage(app.QCTab);
-            app.Image.Position = [198 93 108 144];
+            app.Image.Position = [203 125 108 144];
             app.Image.ImageSource = 'index2.png';
 
             % Create RUNButton
@@ -536,8 +554,63 @@ classdef test_exported < matlab.apps.AppBase
             app.RUNButton.FontWeight = 'bold';
             app.RUNButton.FontColor = [1 1 1];
             app.RUNButton.Tooltip = {'run quality control and save results to pdf'};
-            app.RUNButton.Position = [20 30 282 64];
+            app.RUNButton.Position = [16 63 295 64];
             app.RUNButton.Text = 'RUN';
+
+            % Create AddPrefixesButton
+            app.AddPrefixesButton = uibutton(app.QCTab, 'push');
+            app.AddPrefixesButton.ButtonPushedFcn = createCallbackFcn(app, @AddPrefixesButtonPushed, true);
+            app.AddPrefixesButton.BackgroundColor = [0 0.3294 0.6];
+            app.AddPrefixesButton.FontColor = [1 1 1];
+            app.AddPrefixesButton.Enable = 'off';
+            app.AddPrefixesButton.Position = [110 24 90 22];
+            app.AddPrefixesButton.Text = 'Add Prefixes';
+
+            % Create ViewLogFileButton
+            app.ViewLogFileButton = uibutton(app.QCTab, 'push');
+            app.ViewLogFileButton.ButtonPushedFcn = createCallbackFcn(app, @ViewLogFileButtonPushed, true);
+            app.ViewLogFileButton.BackgroundColor = [0 0.3294 0.6];
+            app.ViewLogFileButton.FontColor = [1 1 1];
+            app.ViewLogFileButton.Enable = 'off';
+            app.ViewLogFileButton.Position = [24 24 82 22];
+            app.ViewLogFileButton.Text = 'View Log File';
+
+            % Create RemovePrefixesButton
+            app.RemovePrefixesButton = uibutton(app.QCTab, 'push');
+            app.RemovePrefixesButton.ButtonPushedFcn = createCallbackFcn(app, @RemovePrefixesButtonPushed, true);
+            app.RemovePrefixesButton.BackgroundColor = [0 0.3294 0.6];
+            app.RemovePrefixesButton.FontColor = [1 1 1];
+            app.RemovePrefixesButton.Enable = 'off';
+            app.RemovePrefixesButton.Position = [203 24 107 22];
+            app.RemovePrefixesButton.Text = 'Remove Prefixes';
+
+            % Create GetdatetimePanel_2
+            app.GetdatetimePanel_2 = uipanel(app.QCTab);
+            app.GetdatetimePanel_2.ForegroundColor = [1 1 1];
+            app.GetdatetimePanel_2.Title = 'Get datetime';
+            app.GetdatetimePanel_2.BackgroundColor = [0 0.3294 0.6];
+            app.GetdatetimePanel_2.Position = [16 279 295 91];
+
+            % Create FiledateEditField_2Label
+            app.FiledateEditField_2Label = uilabel(app.GetdatetimePanel_2);
+            app.FiledateEditField_2Label.HorizontalAlignment = 'right';
+            app.FiledateEditField_2Label.FontColor = [1 1 1];
+            app.FiledateEditField_2Label.Position = [58 43 48 22];
+            app.FiledateEditField_2Label.Text = 'Filedate';
+
+            % Create FiledateEditField_2
+            app.FiledateEditField_2 = uieditfield(app.GetdatetimePanel_2, 'text');
+            app.FiledateEditField_2.Editable = 'off';
+            app.FiledateEditField_2.Enable = 'off';
+            app.FiledateEditField_2.Position = [121 43 127 22];
+            app.FiledateEditField_2.Value = '-----yymmdd------.wav';
+
+            % Create TEXT_2
+            app.TEXT_2 = uilabel(app.GetdatetimePanel_2);
+            app.TEXT_2.HorizontalAlignment = 'center';
+            app.TEXT_2.FontColor = [1 1 1];
+            app.TEXT_2.Position = [18 1 269 35];
+            app.TEXT_2.Text = {'The data of the first file in the source directory is:'; 'yymmdd'};
 
             % Create Copy2ArchiveTab
             app.Copy2ArchiveTab = uitab(app.TabGroup);
@@ -549,7 +622,7 @@ classdef test_exported < matlab.apps.AppBase
             app.SettingsPanel_2.ForegroundColor = [1 1 1];
             app.SettingsPanel_2.Title = 'Settings';
             app.SettingsPanel_2.BackgroundColor = [0 0.3294 0.6];
-            app.SettingsPanel_2.Position = [11 268 209 187];
+            app.SettingsPanel_2.Position = [11 409 209 187];
 
             % Create SeaDropDownLabel
             app.SeaDropDownLabel = uilabel(app.SettingsPanel_2);
@@ -638,7 +711,7 @@ classdef test_exported < matlab.apps.AppBase
             app.COPYButton.FontWeight = 'bold';
             app.COPYButton.FontColor = [1 1 1];
             app.COPYButton.Enable = 'off';
-            app.COPYButton.Position = [11 27 301 66];
+            app.COPYButton.Position = [11 168 301 66];
             app.COPYButton.Text = 'COPY';
 
             % Create ControlPanel
@@ -646,7 +719,7 @@ classdef test_exported < matlab.apps.AppBase
             app.ControlPanel.ForegroundColor = [1 1 1];
             app.ControlPanel.Title = 'Control';
             app.ControlPanel.BackgroundColor = [0 0.3294 0.6];
-            app.ControlPanel.Position = [11 103 301 57];
+            app.ControlPanel.Position = [11 244 301 57];
 
             % Create FiledateoffirstfileiscorrectCheckBox
             app.FiledateoffirstfileiscorrectCheckBox = uicheckbox(app.ControlPanel);
@@ -662,7 +735,7 @@ classdef test_exported < matlab.apps.AppBase
 
             % Create Image2
             app.Image2 = uiimage(app.Copy2ArchiveTab);
-            app.Image2.Position = [226 314 101 134];
+            app.Image2.Position = [226 455 101 134];
             app.Image2.ImageSource = 'index2.png';
 
             % Create GetdatetimePanel
@@ -670,7 +743,7 @@ classdef test_exported < matlab.apps.AppBase
             app.GetdatetimePanel.ForegroundColor = [1 1 1];
             app.GetdatetimePanel.Title = 'Get datetime';
             app.GetdatetimePanel.BackgroundColor = [0 0.3294 0.6];
-            app.GetdatetimePanel.Position = [13 167 301 91];
+            app.GetdatetimePanel.Position = [11 308 303 91];
 
             % Create FiledateEditFieldLabel
             app.FiledateEditFieldLabel = uilabel(app.GetdatetimePanel);
@@ -698,6 +771,20 @@ classdef test_exported < matlab.apps.AppBase
             app.CalibrationTab = uitab(app.TabGroup);
             app.CalibrationTab.Title = 'Calibration';
             app.CalibrationTab.BackgroundColor = [0 0.2314 0.4118];
+
+            % Create gjhkDropDownLabel
+            app.gjhkDropDownLabel = uilabel(app.CalibrationTab);
+            app.gjhkDropDownLabel.HorizontalAlignment = 'right';
+            app.gjhkDropDownLabel.Position = [94 479 28 22];
+            app.gjhkDropDownLabel.Text = 'gjhk';
+
+            % Create gjhkDropDown
+            app.gjhkDropDown = uidropdown(app.CalibrationTab);
+            app.gjhkDropDown.Position = [137 479 100 22];
+
+            % Create HTML
+            app.HTML = uihtml(app.CalibrationTab);
+            app.HTML.Position = [113 301 100 100];
 
             % Show the figure after all components are created
             app.UIFigure.Visible = 'on';

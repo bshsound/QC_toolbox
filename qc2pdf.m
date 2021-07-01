@@ -1,6 +1,6 @@
 %% function, that writes qc results to pdf
 
-function [] = qc2pdf(QC,duration,meanv,sr,stdrms,ts,ftime,path,qc_path,station,DateD,DateR,filedur)
+function [log] = qc2pdf(QC,duration,meanv,sr,stdrms,ts,ftime,path,qc_path,station,DateD,DateR,filedur)
     %% add path to R2L toolbox
     addpath('.\libs\R2L');
 
@@ -29,13 +29,13 @@ function [] = qc2pdf(QC,duration,meanv,sr,stdrms,ts,ftime,path,qc_path,station,D
 
     %% Write everythin as cell and append to texfile
     newcell={...
-        'The quality of all files is checked in a number of ways. The quality parameters and their corresponding flag numbers are listed below. Eventually prefixes (containing all QC-flags) are added to all files, that are not found to be flawless.'
+        'The quality of all files is checked in a number of ways. The quality parameters and their corresponding flag numbers are listed below. Eventually prefixes (containing all QC-flags) are added to all files.'
         '\begin{enumerate}';...
         '\item the .wav file cannot be read';... 
         '\item file was recorded before deployment to water';... 
         '\item file was recorded after recovery from water';... 
-        '\item samplerates varies from target samplerate';... 
-        '\item more than 0.1% of the recording is clipped';... 
+        '\item samplerates varies from target samplerate ';... 
+        '\item more than 0.1\% of the recording is clipped';... 
         '\item file length longer than other recordings (>1\%)';... 
         '\item file length shorter than other recordings (>1\%)';... 
         '\item DC-Offset';... 
@@ -59,7 +59,8 @@ function [] = qc2pdf(QC,duration,meanv,sr,stdrms,ts,ftime,path,qc_path,station,D
         ['In total ', num2str(length(flist)) ' files were scanned, which took ', datestr(datenum(0,0,0,0,0,toc),'HH:MM:SS') '.'];...
         %% Wieviele files sollten zwischen deployment und recovery liegen
         ['With file lengths of ', num2str(filedur) ' seconds, it is expected, that ', num2str(floor(TarFileNo)) ' files were recorded between ', datestr(DateD), ' and ', datestr(DateR), '.' ];...
-        ['Thus, the difference of expected recordings and actual recordings with no flaws (QC14) results to ',num2str(floor(GoodFiles - TarFileNo)),'.'];...
+        [num2str(GoodFiles) ' were found to be flawless.'];...
+        ['Thus, the difference of expected recordings and actual flawless recordings results to ',num2str(floor(GoodFiles - TarFileNo)+1),'.'];...
         };
         R2L_Append2TexOutput(texfile,newcell);
         
@@ -76,7 +77,7 @@ figure1 = figure(...
         grid on
         labels = {'QC1','QC2','QC3','QC4','QC5','QC6','QC7','QC8','QC9','QC10','QC11','QC12','QC13','QC14'};
         set(gca,'XTickLabel',labels)
-        ylim([0 max(nansum(QC))+0.5])
+        ylim([0 max(nansum(QC))+0.1*max(nansum(QC))])
         ylabel('no. of files')
         
         subplot(4,2,3)
@@ -84,8 +85,8 @@ figure1 = figure(...
         ylabel('duration [s]')
         xlabel('file no.')
         yline(filedur,'r--')
-        ml = max([duration,filedur+1]);
-        ylim([min(duration) ml])
+        ml = max([duration,filedur]);
+        ylim([min(duration)-0.1*filedur ml+0.1*filedur])
         grid on
         
         subplot(4,2,4)
@@ -116,6 +117,7 @@ figure1 = figure(...
         ylabel('no. of samples')
         xlabel('file no.')
         grid on
+        ylim([min(ts)-0.1*min(ts) max(ts)+0.1*max(ts)])
         
         subplot(4,2,8)
         plot(ftime)
@@ -142,6 +144,7 @@ newcell={...
         '\begin{tabularx}{\textwidth}{@{}C{3.5cm}|Y|Y|Y|Y|Y|Y|Y|Y|Y|Y|Y|Y|Y|Y@{}}';...
         '\textbf{Filename} & \textbf{Q1} & \textbf{Q2} & \textbf{Q3} & \textbf{Q4} & \textbf{Q5} & \textbf{Q6} & \textbf{Q7} & \textbf{Q8} & \textbf{Q9} & \textbf{Q10} & \textbf{Q11} & \textbf{Q12} & \textbf{Q13} & \textbf{Q14} \\ \hhline{=|=|=|=|=|=|=|=|=|=|=|=|=|=|=}';...
         '\endhead';...
+        ['Total &' num2str(sum(QC(:,1))) '&' num2str(sum(QC(:,2))) '&' num2str(sum(QC(:,3))) '&' num2str(sum(QC(:,4))) '&' num2str(sum(QC(:,5))) '&' num2str(sum(QC(:,6))) '&' num2str(sum(QC(:,7))) '&' num2str(sum(QC(:,8))) '&' num2str(sum(QC(:,9))) '&' num2str(sum(QC(:,10))) '&' num2str(sum(QC(:,11))) '&' num2str(sum(QC(:,12))) '&' num2str(sum(QC(:,13))) '&' num2str(sum(QC(:,14))) '\\ \hline'];...
     };
     R2L_Append2TexOutput(texfile,newcell);  
     
@@ -171,18 +174,21 @@ newcell={...
     %%%%% Close the document
     R2L_Append2TexOutput(texfile,{'\end{document}'});
     %%%%% NOW COMPILE THE DOCUMENT
-    cd(QClog_ordner)
+    currentFolder = pwd;
+    cd(QClog_ordner);
 
     R2L_compile(texfile);
+    cd(currentFolder);
     %% Im Logordner alles außer das .pdf löschen
-%     filelist = dir(QClog_ordner);
-%     for ii = 3:length(filelist)
-%         name = filelist(ii).name;
-%         if name(end)~='f'
-%             delete([QClog_ordner name]);
-%         end
-%     end
-%     %% Write variables to m folder
-% save([qc_path 'mat_files\' station '_' yy '_' mm '_qc_data.mat'],'DateD','DateR','duration','filedur','ftime','meanv','path','QC','sr','station','stdrms','ts');
+    filelist = dir(QClog_ordner);
+    for ii = 3:length(filelist)
+        name = filelist(ii).name;
+        if name(end)~='f'
+            delete([QClog_ordner name]);
+        end
+    end
+    %% Write variables to m folder
+save([qc_path 'mat_files\' station '_' yy '_' mm '_qc_data.mat'],'DateD','DateR','duration','filedur','ftime','meanv','path','QC','sr','station','stdrms','ts');
+log = [qc_path 'Logs\' station '_' yy '_' mm '_' 'qclog.pdf'];
 end
 
