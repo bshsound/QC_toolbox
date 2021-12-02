@@ -11,18 +11,22 @@ if size(QC,1)~=size(flist,1)
     return
 end
 
-%% Check if prefix was allready added (start with QC?)
+%% Check if allready flagged 
 for ff=1:length(flist)
-    if isequal(flist(ff).name(1:2),'QC')
-            msg = 'An error occured. Prefixes have already been added to one or more files in the directory.';
+    if isequal(flist(ff).name(end),'x')
+            msg = 'An error occured. One or more files in the directory have already been flagged.';
             errordlg(msg)
     return
     end
 end
 
-%% add prefixes to all files
+%% sort out
 for ff=1:length(flist)
-    prefix = sprintf('%d', QC(ff,:));
-    movefile([path flist(ff).name], [path 'QC_' prefix '_F_' flist(ff).name]);
+%     prefix = sprintf('%d', QC(ff,:)); % old version with 14 indices for
+%     quality flags
+    if QC(ff,14)==0
+%     movefile([path flist(ff).name], [path 'QC_' prefix '_F_' flist(ff).name]);
+    movefile([path flist(ff).name], [path flist(ff).name 'x']);
+    end
 end
     end

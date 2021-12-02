@@ -114,18 +114,16 @@ figure1 = figure(...
         grid on
         
         subplot(4,2,7)
-        co = [1,1,1;1,0,0;0,1,0];
         QC_tmp =QC;
-        QC_tmp(:,14)=QC_tmp(:,14)*2;
-        imagesc(QC_tmp')
+        QC_tmp
+        imagesc(QC')
         axis ij
-        colormap(co)
-        xlabel('file')
-        ylabel('QC')
-        yticks([1:14])
-        grid on
         
-                
+       
+        
+
+        patch(1:length(QC),[1:14],QC','r')
+        
         subplot(4,2,8)
         plot(ftime)
         xlabel('file no.')

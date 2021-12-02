@@ -1,5 +1,5 @@
 %% Function, that comprises all quality checks
-function [QC,duration,meanv,sr,stdrms,ts,ftime] = QualityChecks(path_in,depl,recov,filedur,interval)
+function [QC,duration,meanv,sr,stdrms,ts,ftime] = QualityChecks(station,path_in,qc_path,depl,recov,filedur,interval)
 %% add libs
 addpath('X:\Meereskunde\Unterwasserschall\HDF5_Testdaten_Skripte\Skripte\Matlabskripte\QC_toolbox\libs\')
 tic
@@ -41,7 +41,8 @@ if filedur == 0;
 end
 
 % Get file size from first file
-filesize = flist(1).bytes;
+% filesize = flist(1).bytes;
+filesize = median([flist.bytes]); %default file size is median of dir (update: 01.07.2021)
 
 progressbar
 for kk = 1:length(flist)
@@ -85,11 +86,11 @@ for kk = 1:length(flist)
     
     %% QC_11: Check for gap between recordings
     if kk==1
-        Q_11(kk) = Q11(flist(kk).name,path_in,[],flist(kk+1).name,filedur,interval,0.01,1);
+        Q_11(kk) = Q11(flist(kk).name,path_in,[],flist(kk+1).name,filedur,interval,60,1);
     elseif kk==length(flist)
-        Q_11(kk) = Q11(flist(kk).name,path_in,flist(kk-1).name,[],filedur,interval,0.01,2);
+        Q_11(kk) = Q11(flist(kk).name,path_in,flist(kk-1).name,[],filedur,interval,60,2);
     else
-        Q_11(kk) = Q11(flist(kk).name,path_in,flist(kk-1).name,flist(kk+1).name,filedur,interval,0.01,3);
+        Q_11(kk) = Q11(flist(kk).name,path_in,flist(kk-1).name,flist(kk+1).name,filedur,interval,60,3);
     end
     
     %% QC_12: Check if time in filename is plausible
@@ -112,12 +113,17 @@ end
     Q_10 = Q10(stdrms,10);
     
     %% Check if DC Offset leads to differences in levels > 1 dB
-    Q_08 = Q08(Q_02,meanv,3);
+    Q_08 = Q08(meanv);
     
     %% QC_14: Check if everything is okay is performed after QC_10 and is 
     Q_14 = Q14([Q_01;Q_02;Q_03;Q_04;Q_05;Q_06;Q_07;Q_08;Q_09;Q_10;Q_11;Q_12;Q_13]')
  
 %% Check if no NaNs remain in QC Matrix    
 QC = [Q_01;Q_02;Q_03;Q_04;Q_05;Q_06;Q_07;Q_08;Q_09;Q_10;Q_11;Q_12;Q_13;Q_14]'
-
+%% Create QC-log file .tex
+yy = num2str(year(depl));
+mm = num2str(month(depl),'%02d');
+QC_mat_folder = [qc_path 'mat_files\'];
+mkdir(QC_mat_folder);
+save([qc_path 'mat_files\' station '_' yy '_' mm '_qc_data.mat'],'depl','recov','duration','filedur','ftime','meanv','path_in','QC','sr','station','stdrms','ts');
 end

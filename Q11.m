@@ -8,7 +8,7 @@ if index == 1
     t = datetime(filename(6:end-4),'InputFormat','yyMMddHHmmss');
     t_after = datetime(filename_aft(6:end-4),'InputFormat','yyMMddHHmmss');
     delta_t_after = abs(t_after-t);
-    if delta_t_after > seconds(duration+duration*limit) || delta_t_after < seconds(duration-duration*limit)
+    if delta_t_after > seconds(duration+limit) || delta_t_after < seconds(duration-limit)
         flag = 1;
     else
         flag = 0;
@@ -17,7 +17,7 @@ elseif index == 2
     t = datetime(filename(6:end-4),'InputFormat','yyMMddHHmmss');
     t_bef = datetime(filename_bef(6:end-4),'InputFormat','yyMMddHHmmss');
     delta_t_bef = abs(t-t_bef);
-    if delta_t_bef > seconds(duration+duration*limit) || delta_t_bef < seconds(duration-duration*limit)
+    if delta_t_bef > seconds(duration+limit) || delta_t_bef < seconds(duration-limit)
         flag = 1;
     else
         flag = 0;
@@ -28,7 +28,7 @@ elseif index == 3
         t_after = datetime(filename_aft(6:end-4),'InputFormat','yyMMddHHmmss');
         delta_t_after = abs(t_after-t);
         delta_t_bef = abs(t-t_bef);
-        if delta_t_bef > seconds(duration+duration*limit) || delta_t_after > seconds(duration+duration*limit) || delta_t_bef < seconds(duration-duration*limit) || delta_t_after < seconds(duration-duration*limit)
+        if delta_t_bef > seconds(duration+limit) || delta_t_after > seconds(duration+limit) || delta_t_bef < seconds(duration-limit) || delta_t_after < seconds(duration-limit)
 %             movefile([filepath filename], [filepath 'NoRealData11_' filename]);
             flag = 1;
         else

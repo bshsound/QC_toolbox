@@ -1,6 +1,6 @@
 % Quality Check 08: Check if recording suffers from DC-offset :(
 
-function [flag] = Q08(meanv)
+function [flag] = Q08(Q2,meanv,limit)
 %     idx = find(Q2==1, 1, 'last' );
 %     flag(1:idx) = 1;
 %     if ~isempty(idx)
@@ -19,17 +19,21 @@ function [flag] = Q08(meanv)
 %         end
 %     end
 
-flag = double(isoutlier(meanv,'mean'));
-
+oi = isoutlier(meanv,'mean');
+f
+for ff = 1:length(meanv)
+    ol = isoutlier()
+    
+end
 end
 
 
-% %% TEST
-% 
-% plot(meanv)
-% hold on
-% plot(meanv+std(meanv),'r')
-% plot(meanv-std(meanv),'r')
-% 
-% find(meanv > meanv+std(meanv) | meanv < meanv-std(meanv))
+%% TEST
+
+plot(meanv)
+hold on
+plot(meanv+std(meanv),'r')
+plot(meanv-std(meanv),'r')
+
+find(meanv > meanv+std(meanv) | meanv < meanv-std(meanv))
 

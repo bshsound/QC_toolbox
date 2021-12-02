@@ -1,4 +1,4 @@
-classdef test_exported < matlab.apps.AppBase
+classdef test2_exported < matlab.apps.AppBase
 
     % Properties that correspond to app components
     properties (Access = public)
@@ -77,8 +77,18 @@ classdef test_exported < matlab.apps.AppBase
         Panel                           matlab.ui.container.Panel
         SearchButton_2                  matlab.ui.control.Button
         TargetDirectoryDropDownLabel_3  matlab.ui.control.Label
-        UIAxes                          matlab.ui.control.UIAxes
         Lamp_10                         matlab.ui.control.Lamp
+        UIAxes                          matlab.ui.control.UIAxes
+        BSoundHTab                      matlab.ui.container.Tab
+        OpenBSoundHButton               matlab.ui.control.Button
+        Image4                          matlab.ui.control.Image
+        TEXT_3                          matlab.ui.control.Label
+        TEXT_4                          matlab.ui.control.Label
+        TEXT_5                          matlab.ui.control.Label
+        TEXT_6                          matlab.ui.control.Label
+        TEXT_7                          matlab.ui.control.Label
+        TEXT_8                          matlab.ui.control.Label
+        TEXT_9                          matlab.ui.control.Label
     end
 
     
@@ -436,7 +446,7 @@ removeQCprefix(app.path)
 
         % Button pushed function: DELETEButton
         function DELETEButtonPushed(app, event)
-            clear_import(app.sourcedir,app.sea,app.station) 
+            clear_import(app.sourcedir,app.targetdir,app.sea,app.station,app.channel,app.yy,app.mm,app.dd) 
         end
 
         % Button pushed function: SearchButton_2
@@ -444,7 +454,6 @@ removeQCprefix(app.path)
             [file,path] = uigetfile({'*wav','Audio Files (*wav)';'*.*','All Files (*.*)'}, ...
             'Select File','X:\Meereskunde\Unterwasserschall\AMSO23');   
             drawnow;
-            figure(app.UIFigure)
             app.Lamp_10.Color = 'g';
             signal = audioread([path file]);
             info = audioinfo([path file]);
@@ -453,6 +462,7 @@ removeQCprefix(app.path)
             plot(app.UIAxes,xwerte(1:100:end),signal(1:100:end));
             h=msgbox('Please click a valid start end time of the calibation signal in the graphic!');
             waitfor(h)
+            gui_ginputax(2,app.UIAxes)
 
   
                         
@@ -469,6 +479,11 @@ removeQCprefix(app.path)
 %             ende = [temp(1,1) temp(1,2)]; % Gets the (x,y) coordinates
 %             xline(app.UIAxes,ende(1),'r')
             
+        end
+
+        % Button pushed function: OpenBSoundHButton
+        function OpenBSoundHButtonPushed(app, event)
+            ! C:\SOUND\env379\Scripts\python.exe C:\SOUND\env\Lib\site-packages\bsoundh\app.py
         end
     end
 
@@ -790,7 +805,7 @@ removeQCprefix(app.path)
 
             % Create ChannelDropDown
             app.ChannelDropDown = uidropdown(app.SettingsPanel_2);
-            app.ChannelDropDown.Items = {'Select Channel', 'H1', 'H2'};
+            app.ChannelDropDown.Items = {'Select Channel', 'H1', 'H2', 'STEREO'};
             app.ChannelDropDown.ValueChangedFcn = createCallbackFcn(app, @ChannelDropDownValueChanged, true);
             app.ChannelDropDown.Position = [114 75 140 22];
             app.ChannelDropDown.Value = 'Select Channel';
@@ -1012,6 +1027,75 @@ removeQCprefix(app.path)
             app.UIAxes.YGrid = 'on';
             app.UIAxes.Position = [11 351 308 185];
 
+            % Create BSoundHTab
+            app.BSoundHTab = uitab(app.TabGroup);
+            app.BSoundHTab.Title = 'BSoundH';
+            app.BSoundHTab.BackgroundColor = [0 0.2314 0.4118];
+
+            % Create OpenBSoundHButton
+            app.OpenBSoundHButton = uibutton(app.BSoundHTab, 'push');
+            app.OpenBSoundHButton.ButtonPushedFcn = createCallbackFcn(app, @OpenBSoundHButtonPushed, true);
+            app.OpenBSoundHButton.Position = [13 561 100 22];
+            app.OpenBSoundHButton.Text = 'Open BSoundH';
+
+            % Create Image4
+            app.Image4 = uiimage(app.BSoundHTab);
+            app.Image4.Position = [183 483 100 100];
+            app.Image4.ImageSource = 'rolf.png';
+
+            % Create TEXT_3
+            app.TEXT_3 = uilabel(app.BSoundHTab);
+            app.TEXT_3.HorizontalAlignment = 'center';
+            app.TEXT_3.FontSize = 24;
+            app.TEXT_3.FontWeight = 'bold';
+            app.TEXT_3.FontColor = [1 1 1];
+            app.TEXT_3.Position = [7 423 282 39];
+            app.TEXT_3.Text = 'Processing in BSoundH';
+
+            % Create TEXT_4
+            app.TEXT_4 = uilabel(app.BSoundHTab);
+            app.TEXT_4.HorizontalAlignment = 'center';
+            app.TEXT_4.FontSize = 14;
+            app.TEXT_4.FontWeight = 'bold';
+            app.TEXT_4.FontColor = [1 1 1];
+            app.TEXT_4.Position = [1 403 282 39];
+            app.TEXT_4.Text = 'Remember the big 5';
+
+            % Create TEXT_5
+            app.TEXT_5 = uilabel(app.BSoundHTab);
+            app.TEXT_5.FontWeight = 'bold';
+            app.TEXT_5.FontColor = [1 1 1];
+            app.TEXT_5.Position = [7 357 347 39];
+            app.TEXT_5.Text = '1. Import one month of data by selecting the folder';
+
+            % Create TEXT_6
+            app.TEXT_6 = uilabel(app.BSoundHTab);
+            app.TEXT_6.FontWeight = 'bold';
+            app.TEXT_6.FontColor = [1 1 1];
+            app.TEXT_6.Position = [7 330 300 34];
+            app.TEXT_6.Text = '2. Set start date from file name and set files as fixed and alligned';
+
+            % Create TEXT_7
+            app.TEXT_7 = uilabel(app.BSoundHTab);
+            app.TEXT_7.FontWeight = 'bold';
+            app.TEXT_7.FontColor = [1 1 1];
+            app.TEXT_7.Position = [7 295 347 39];
+            app.TEXT_7.Text = '3. Set calibration factor';
+
+            % Create TEXT_8
+            app.TEXT_8 = uilabel(app.BSoundHTab);
+            app.TEXT_8.FontWeight = 'bold';
+            app.TEXT_8.FontColor = [1 1 1];
+            app.TEXT_8.Position = [7 260 347 39];
+            app.TEXT_8.Text = '4. Start Ambient Evaluation';
+
+            % Create TEXT_9
+            app.TEXT_9 = uilabel(app.BSoundHTab);
+            app.TEXT_9.FontWeight = 'bold';
+            app.TEXT_9.FontColor = [1 1 1];
+            app.TEXT_9.Position = [7 222 347 39];
+            app.TEXT_9.Text = '5. Export data (don''t forget to validate)';
+
             % Show the figure after all components are created
             app.UIFigure.Visible = 'on';
         end
@@ -1021,7 +1105,7 @@ removeQCprefix(app.path)
     methods (Access = public)
 
         % Construct app
-        function app = test_exported
+        function app = test2_exported
 
             % Create UIFigure and components
             createComponents(app)
