@@ -1,6 +1,6 @@
 %% function, that writes qc results to pdf
 
-function [log] = qc2pdf(QC,duration,meanv,sr,stdrms,ts,ftime,path,qc_path,station,DateD,DateR,filedur)
+function [log] = qc2pdf(QC,duration,meanv,sr,stdrms,ts,ftime,path,qc_path,station,DateD,DateR,filedur,interval)
     %% add path to R2L toolbox
     addpath('.\libs\R2L');
 
@@ -10,8 +10,11 @@ function [log] = qc2pdf(QC,duration,meanv,sr,stdrms,ts,ftime,path,qc_path,statio
     QClog=[qc_path 'Logs\' station '_' yy '_' mm '_' 'qclog.tex'];
     QC_mat_folder = [qc_path 'mat_files\'];
     QClog_ordner = [qc_path 'Logs\'];
+    Transferlog_ordner = [qc_path 'Transferlog\'];
     mkdir(QClog_ordner);
     mkdir(QC_mat_folder);
+    mkdir(Transferlog_ordner);
+    
     %% delete QClog if file of same name already exists
     if isfile(QClog)
          delete(QClog);
@@ -29,7 +32,7 @@ function [log] = qc2pdf(QC,duration,meanv,sr,stdrms,ts,ftime,path,qc_path,statio
 
     %% Write everythin as cell and append to texfile
     newcell={...
-        'The quality of all files is checked in a number of ways. The quality parameters and their corresponding flag numbers are listed below. Eventually prefixes (containing all QC-flags) are added to all files.'
+        'The quality of all files is checked in a number of ways. The quality parameters and their corresponding flag numbers are listed below. Eventually the suffixes of corrupted files are changed to .wavx. wavx files are still readable, but are no longer recognized by BSoundH.'
         '\begin{enumerate}';...
         '\item the .wav file cannot be read';... 
         '\item file was recorded before deployment to water';... 
@@ -50,7 +53,14 @@ function [log] = qc2pdf(QC,duration,meanv,sr,stdrms,ts,ftime,path,qc_path,statio
         R2L_Append2TexOutput(texfile,newcell);
         
         flist = dir([path '*.wav']);
-        TarFileNo = (seconds(DateR-DateD)/filedur);
+        %% calculate Target Number of files
+        if interval > 0
+            TarFileNo = (seconds(DateR-DateD)/interval);
+        else
+            TarFileNo = (seconds(DateR-DateD)/filedur);
+        end
+        
+        %%
         GoodFiles = length(find(QC(:,14)==1));
         
     newcell={...
@@ -58,10 +68,10 @@ function [log] = qc2pdf(QC,duration,meanv,sr,stdrms,ts,ftime,path,qc_path,statio
         '\section{Results}';...
         ['In total ', num2str(length(flist)) ' files were scanned, which took ', datestr(datenum(0,0,0,0,0,toc),'HH:MM:SS') '.'];...
         %% Wieviele files sollten zwischen deployment und recovery liegen
-        ['With file lengths of ', num2str(filedur) ' seconds, it is expected, that ', num2str(floor(TarFileNo)) ' files were recorded between ', datestr(DateD), ' and ', datestr(DateR), '.' ];...
+        ['With file lengths of ', num2str(filedur) ' seconds and a Duty Cycle of ' num2str(interval) ' seconds, it is expected, that ', num2str(floor(TarFileNo)) ' files were recorded between ', datestr(DateD), ' and ', datestr(DateR), '.' ];...
         [num2str(GoodFiles) ' were found to be flawless.'];...
         ['Thus, the difference of expected recordings and actual flawless recordings results to ',num2str(floor(GoodFiles - TarFileNo)+1),'.'];...
-        [num2str(length(QC)-sum(QC(:,14))) ' files were discarded and are flagged as .wavx and are no longer readable by BSoundH (but by everything else ... ^^).'];...
+        [num2str(length(QC)-sum(QC(:,14))) ' files were discarded and are flagged as .wavx and are no longer readable by BSoundH (but by everything else ...).'];...
         };
         R2L_Append2TexOutput(texfile,newcell);
         
@@ -165,7 +175,7 @@ for ii = 1:length(flist)
     end
     if a(14) ~= 'x' % if - to get only files with flaws
     newcell={...    
-    [flist(ii).name '&' a(1) '&' a(2) '&' a(3) '&' a(4) '&' a(5) '&' a(6) '&' a(7) '&' a(8) '&' a(9) '&' a(10) '&' a(11) '&' a(12) '&' a(13) '&' a(14) '\\ \hline'];...
+    [flist(ii).name(1:3) '\' flist(ii).name(4:end) '&' a(1) '&' a(2) '&' a(3) '&' a(4) '&' a(5) '&' a(6) '&' a(7) '&' a(8) '&' a(9) '&' a(10) '&' a(11) '&' a(12) '&' a(13) '&' a(14) '\\ \hline'];...
     };
     R2L_Append2TexOutput(texfile,newcell);  
     end
