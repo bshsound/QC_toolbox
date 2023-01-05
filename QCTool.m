@@ -90,12 +90,15 @@ classdef QCTool < matlab.apps.AppBase
         Lamp_12                         matlab.ui.control.Lamp
         ChooseandComputeButton          matlab.ui.control.Button
         SoundPressureinChamberEditFieldLabel  matlab.ui.control.Label
-        SoundPressureinChamberEditField  matlab.ui.control.NumericEditField
         CalibrationFactordBEditFieldLabel  matlab.ui.control.Label
-        CalibrationFactordBEditField    matlab.ui.control.NumericEditField
         linearCalibrationFactorEditFieldLabel  matlab.ui.control.Label
-        linearCalibrationFactorEditField  matlab.ui.control.NumericEditField
         ResultsPanel                    matlab.ui.container.Panel
+        SoundPressureinChamberdBLabel   matlab.ui.control.Label
+        CalibrationLeveldBre1VPaLabel   matlab.ui.control.Label
+        LinearCalibrationFactorVPaLabel  matlab.ui.control.Label
+        linearCalibrationFactorEditField  matlab.ui.control.NumericEditField
+        CalibrationFactordBEditField    matlab.ui.control.NumericEditField
+        SoundPressureinChamberEditField  matlab.ui.control.NumericEditField
         UIAxes                          matlab.ui.control.UIAxes
         UIAxes2                         matlab.ui.control.UIAxes
         BSoundHTab                      matlab.ui.container.Tab
@@ -685,6 +688,9 @@ removeQCprefix(app.path)
         fprintf(fp, '%s\n',['The calibration level in dB/V: ' num2str(caldb) ]);
         fprintf(fp, '%s\n',['The linear calibration level in µPa/V: ' num2str(callin)]);
         fclose(fp)
+        
+        %% write output to results tab
+        
             
         end
 
@@ -1012,7 +1018,7 @@ removeQCprefix(app.path)
             app.RUNButton.FontColor = [1 1 1];
             app.RUNButton.Enable = 'off';
             app.RUNButton.Tooltip = {'run quality control and save results to pdf'};
-            app.RUNButton.Position = [26 41 295 64];
+            app.RUNButton.Position = [16 33 295 64];
             app.RUNButton.Text = 'RUN';
 
             % Create FlagFilesButton
@@ -1197,7 +1203,7 @@ removeQCprefix(app.path)
             app.Image3 = uiimage(app.SettingsPanel_2);
             app.Image3.ImageClickedFcn = createCallbackFcn(app, @SpaceSnifferButtonPushed, true);
             app.Image3.Tooltip = {'SPACESNIFFER'};
-            app.Image3.Position = [225 7 29 36];
+            app.Image3.Position = [219 7 29 36];
             app.Image3.ImageSource = 'snifferdog.png';
 
             % Create COPYButton
@@ -1376,11 +1382,11 @@ removeQCprefix(app.path)
             app.Lamp_12.Color = [1 0 0];
 
             % Create ChooseandComputeButton
-            app.ChooseandComputeButton = uibutton(app.CalibrationTab, 'push');
+            app.ChooseandComputeButton = uibutton(app.InputwavandVoltagePanel, 'push');
             app.ChooseandComputeButton.ButtonPushedFcn = createCallbackFcn(app, @ChooseandComputeButtonPushed, true);
             app.ChooseandComputeButton.BackgroundColor = [1 1 0];
             app.ChooseandComputeButton.Enable = 'off';
-            app.ChooseandComputeButton.Position = [120 11 132 22];
+            app.ChooseandComputeButton.Position = [120 13 132 22];
             app.ChooseandComputeButton.Text = 'Choose and Compute';
 
             % Create SoundPressureinChamberEditFieldLabel
@@ -1390,20 +1396,12 @@ removeQCprefix(app.path)
             app.SoundPressureinChamberEditFieldLabel.Position = [19 63 157 22];
             app.SoundPressureinChamberEditFieldLabel.Text = 'Sound Pressure in Chamber';
 
-            % Create SoundPressureinChamberEditField
-            app.SoundPressureinChamberEditField = uieditfield(app.CalibrationTab, 'numeric');
-            app.SoundPressureinChamberEditField.Position = [191 63 100 22];
-
             % Create CalibrationFactordBEditFieldLabel
             app.CalibrationFactordBEditFieldLabel = uilabel(app.CalibrationTab);
             app.CalibrationFactordBEditFieldLabel.HorizontalAlignment = 'right';
             app.CalibrationFactordBEditFieldLabel.FontColor = [1 1 1];
             app.CalibrationFactordBEditFieldLabel.Position = [50 36 126 22];
             app.CalibrationFactordBEditFieldLabel.Text = 'Calibration Factor (dB)';
-
-            % Create CalibrationFactordBEditField
-            app.CalibrationFactordBEditField = uieditfield(app.CalibrationTab, 'numeric');
-            app.CalibrationFactordBEditField.Position = [191 36 100 22];
 
             % Create linearCalibrationFactorEditFieldLabel
             app.linearCalibrationFactorEditFieldLabel = uilabel(app.CalibrationTab);
@@ -1412,16 +1410,42 @@ removeQCprefix(app.path)
             app.linearCalibrationFactorEditFieldLabel.Position = [43 8 133 22];
             app.linearCalibrationFactorEditFieldLabel.Text = 'linear Calibration Factor';
 
-            % Create linearCalibrationFactorEditField
-            app.linearCalibrationFactorEditField = uieditfield(app.CalibrationTab, 'numeric');
-            app.linearCalibrationFactorEditField.Position = [191 8 100 22];
-
             % Create ResultsPanel
             app.ResultsPanel = uipanel(app.CalibrationTab);
             app.ResultsPanel.ForegroundColor = [1 1 1];
             app.ResultsPanel.Title = 'Results';
             app.ResultsPanel.BackgroundColor = [0 0.3294 0.6];
             app.ResultsPanel.Position = [9 7 309 112];
+
+            % Create SoundPressureinChamberdBLabel
+            app.SoundPressureinChamberdBLabel = uilabel(app.ResultsPanel);
+            app.SoundPressureinChamberdBLabel.FontColor = [1 1 1];
+            app.SoundPressureinChamberdBLabel.Position = [8 60 175 22];
+            app.SoundPressureinChamberdBLabel.Text = 'Sound Pressure in Chamber dB';
+
+            % Create CalibrationLeveldBre1VPaLabel
+            app.CalibrationLeveldBre1VPaLabel = uilabel(app.ResultsPanel);
+            app.CalibrationLeveldBre1VPaLabel.FontColor = [1 1 1];
+            app.CalibrationLeveldBre1VPaLabel.Position = [8 36 170 22];
+            app.CalibrationLeveldBre1VPaLabel.Text = 'Calibration Level dB re 1V/µPa';
+
+            % Create LinearCalibrationFactorVPaLabel
+            app.LinearCalibrationFactorVPaLabel = uilabel(app.ResultsPanel);
+            app.LinearCalibrationFactorVPaLabel.FontColor = [1 1 1];
+            app.LinearCalibrationFactorVPaLabel.Position = [8 9 173 22];
+            app.LinearCalibrationFactorVPaLabel.Text = 'Linear Calibration Factor V/µPa';
+
+            % Create linearCalibrationFactorEditField
+            app.linearCalibrationFactorEditField = uieditfield(app.CalibrationTab, 'numeric');
+            app.linearCalibrationFactorEditField.Position = [214 17 100 22];
+
+            % Create CalibrationFactordBEditField
+            app.CalibrationFactordBEditField = uieditfield(app.CalibrationTab, 'numeric');
+            app.CalibrationFactordBEditField.Position = [214 42 100 22];
+
+            % Create SoundPressureinChamberEditField
+            app.SoundPressureinChamberEditField = uieditfield(app.CalibrationTab, 'numeric');
+            app.SoundPressureinChamberEditField.Position = [214 68 100 22];
 
             % Create UIAxes
             app.UIAxes = uiaxes(app.CalibrationTab);
