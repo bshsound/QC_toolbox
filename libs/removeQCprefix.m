@@ -2,6 +2,7 @@
 % function, that renames all wavs to BSH standard
 
 function [] = umbenenner(path,Jahr,Monat,Tag,Stunde,Minute,Sekunde,station) 
+
 flist = dir([path '*.wav']);
 for kk = 1:length(flist)
 oldname = flist(kk).name;
