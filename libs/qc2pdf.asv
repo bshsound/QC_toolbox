@@ -144,11 +144,7 @@ figure1 = figure(...
         ylabel('QC')
         yticks([1:14])
         grid on
-        hold on
-        a = plot(NaN,NaN,'r');
-        b = plot(NaN,NaN,'m');
-        c = plot(NaN,NaN,'g');
-        legend([a,b,c],'error','warning','good')
+        legend('')
         
                 
         subplot(4,2,8)

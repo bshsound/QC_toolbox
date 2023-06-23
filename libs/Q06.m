@@ -5,7 +5,7 @@ function [flag] = Q06(filename,filepath,fileduration,planneduration,limit)
 
         if fileduration >  planneduration * (1+limit)    % too long
 %             movefile([filepath filename], [filepath 'NoRealData06_' filename]);
-                flag = 1;
+                flag = 2;
             else
                 flag = 0;
         end

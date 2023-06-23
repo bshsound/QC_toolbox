@@ -2,7 +2,7 @@
 
 function [flag] = Q09(filename,filepath,filesize,deplsize,limit)
         if abs(filesize*100/deplsize -100) > limit    
-                flag = 1;
+                flag = 2;
             else
                 flag = 0;
         end
