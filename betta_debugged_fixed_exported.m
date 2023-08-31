@@ -44,6 +44,18 @@ classdef betta_debugged_fixed_exported < matlab.apps.AppBase
         FiledateEditField_2             matlab.ui.control.EditField
         RenametoStandardButton          matlab.ui.control.Button
         AgreeCheckBox                   matlab.ui.control.CheckBox
+        RemovalofleadingandtrailingsecondsPanel  matlab.ui.container.Panel
+        RemoveleadingsecondsofeachfileCheckBox  matlab.ui.control.CheckBox
+        leadsecseditfield               matlab.ui.control.NumericEditField
+        secondsLabel                    matlab.ui.control.Label
+        RemovetrailingsecondsofeachfileCheckBox  matlab.ui.control.CheckBox
+        trailsecseditfield              matlab.ui.control.NumericEditField
+        secondsLabel_2                  matlab.ui.control.Label
+        CutButton                       matlab.ui.control.Button
+        CreateCopyEditFieldLabel        matlab.ui.control.Label
+        CreateCopyEditField             matlab.ui.control.EditField
+        CheckBox                        matlab.ui.control.CheckBox
+        BrowseButton                    matlab.ui.control.Button
         Copy2ArchiveTab                 matlab.ui.container.Tab
         SettingsPanel_2                 matlab.ui.container.Panel
         SeaDropDownLabel                matlab.ui.control.Label
@@ -101,7 +113,7 @@ classdef betta_debugged_fixed_exported < matlab.apps.AppBase
         SoundPressureinChamberEditField  matlab.ui.control.NumericEditField
         UIAxes                          matlab.ui.control.UIAxes
         UIAxes2                         matlab.ui.control.UIAxes
-        BSoundHTab                      matlab.ui.container.Tab
+        BSoundHorPamguideTab            matlab.ui.container.Tab
         OpenBSoundHButton               matlab.ui.control.Button
         Image4                          matlab.ui.control.Image
         TEXT_3                          matlab.ui.control.Label
@@ -111,7 +123,7 @@ classdef betta_debugged_fixed_exported < matlab.apps.AppBase
         TEXT_7                          matlab.ui.control.Label
         TEXT_8                          matlab.ui.control.Label
         TEXT_9                          matlab.ui.control.Label
-        SpectralQCTab                   matlab.ui.container.Tab
+        h5ConverterSpectralQCTab        matlab.ui.container.Tab
         InputPanel                      matlab.ui.container.Panel
         ListBox                         matlab.ui.control.ListBox
         Addhdf5filesButton              matlab.ui.control.Button
@@ -146,7 +158,7 @@ classdef betta_debugged_fixed_exported < matlab.apps.AppBase
         RUNButton_2                     matlab.ui.control.Button
     end
 
-    
+
     properties (Access = private)
         path = 'X:\Meereskunde\Unterwasserschall-Archiv\Import02\TEST\'% Path to raw .wav files
         qc_path = 'X:\Meereskunde\Unterwasserschall\AMSO23\NORDSEE\ES1\QC\' % path, where qc-log as pdf should be stored
@@ -190,9 +202,13 @@ classdef betta_debugged_fixed_exported < matlab.apps.AppBase
         cal_valsig % valid calibration signal
         cal_volt % Calibration Voltage @125Hz
         cal_path % path to calibration file
+        copypath = 'null'% path where copy of files is saved where leading (and/or trailing) seconds are removed
+        leadsecs = 0 % Number of seconds to be removed at the start of each .wav file
+        trailsecs = 0 % Number of seconds to be removed at the end of each .wav file
     end
     
     methods (Access = private)
+        
         
         
     end
@@ -209,32 +225,33 @@ classdef betta_debugged_fixed_exported < matlab.apps.AppBase
             if filepath(end) ~= '\'
                 filepath = append(filepath,'\');
             end
-%             assignin('base',"path",path)
+            %             assignin('base',"path",path)
             app.path = filepath;
             set(app.RemoveFlagsButton, 'Enable', 'on')
             app.Lamp_6.Color = 'g';
+            
         end
 
         % Value changed function: DeploymentDatePicker
         function DeploymentDatePickerValueChanged(app, event)
-            DateDeployment = app.DeploymentDatePicker.Value; 
-%             assignin('base',"DateDeployment",DateDeployment)
-            app.DateDeployment = DateDeployment;
+            app.DateDeployment = app.DeploymentDatePicker.Value;
+            %             assignin('base',"DateDeployment",DateDeployment)
+            %             app.DateDeployment = DateDeployment;
         end
 
         % Value changed function: StationnameDropDown
         function StationnameDropDownValueChanged(app, event)
             station = app.StationnameDropDown.Value;
-%             assignin('base',"station",station)
+            %             assignin('base',"station",station)
             app.station = station;
         end
 
         % Button pushed function: QCfilesButton
         function QCfilesButtonPushed(app, event)
-           qc_path = uigetdir('X:\Meereskunde\Unterwasserschall\AMSO23\');
-           drawnow;
-           figure(app.QCTool)
-%            assignin('base',"qc_path",qc_path)
+            qc_path = uigetdir('X:\Meereskunde\Unterwasserschall\AMSO23\');
+            drawnow;
+            figure(app.QCTool)
+            %            assignin('base',"qc_path",qc_path)
             if qc_path(end) ~= '\'
                 qc_path = append(qc_path,'\');
             end
@@ -244,41 +261,41 @@ classdef betta_debugged_fixed_exported < matlab.apps.AppBase
 
         % Callback function
         function PathEditFieldValueChanged(app, event)
-                filepath = app.PathEditField.Value;
-%                 assignin('base',"path",path);
-                if filepath(end) ~= '\'
-                    filepath = append(filepath,'\');
-                end
-                app.path = path;
+            filepath = app.PathEditField.Value;
+            %                 assignin('base',"path",path);
+            if filepath(end) ~= '\'
+                filepath = append(filepath,'\');
+            end
+            app.path = path;
         end
 
         % Callback function
         function QClogpathEditFieldValueChanged(app, event)
             qc_path = app.QClogpathEditField.Value;
-%             assignin('base',"qc_path",qc_path)
+            %             assignin('base',"qc_path",qc_path)
             if qc_path(end) ~= '\'
                 qc_path = append(qc_path,'\');
             end
-            app.qc_path = qc_path;            
+            app.qc_path = qc_path;
         end
 
         % Value changed function: RecoveryDatePicker
         function RecoveryDatePickerValueChanged(app, event)
             DateRecovery = app.RecoveryDatePicker.Value;
-%             assignin('base',"DateDeployment",DateDeployment)
+            %             assignin('base',"DateDeployment",DateDeployment)
             app.DateRecovery = DateRecovery;
         end
 
         % Value changed function: FileDurationEditField
         function FileDurationEditFieldValueChanged(app, event)
             filedur = app.FileDurationEditField.Value;
-%             assignin('base',"filedur",filedur)
+            %             assignin('base',"filedur",filedur)
             app.filedur = filedur;
         end
 
         % Button pushed function: GetfromfirstfileButton
         function GetfromfirstfileButtonPushed(app, event)
-            flist = dir([app.path '*.wav']);      
+            flist = dir([app.path '*.wav']);
             for ii = 1:length(flist)
                 filedur = audioinfo([app.path flist(ii).name]).Duration;
                 if filedur < 540
@@ -288,12 +305,12 @@ classdef betta_debugged_fixed_exported < matlab.apps.AppBase
                     break
                 end
             end
-%           filedur = audioinfo([app.path flist(1).name]).Duration;
-%             assignin('base',"filedur",filedur)
+            %           filedur = audioinfo([app.path flist(1).name]).Duration;
+            %             assignin('base',"filedur",filedur)
             
             app.FileDurationEditField.Value = filedur;
-%             app.filedur=filedur;
-%             filedur = app.FileDurationEditField.Value;
+            %             app.filedur=filedur;
+            %             filedur = app.FileDurationEditField.Value;
         end
 
         % Value changed function: HourSpinner
@@ -322,22 +339,22 @@ classdef betta_debugged_fixed_exported < matlab.apps.AppBase
             
         end
 
-        % Callback function
-        function ProcessButtonPushed(app, event)
-            
-        end
-
         % Value changed function: DutyCycleSwitch
         function DutyCycleSwitchValueChanged(app, event)
             value = app.DutyCycleSwitch.Value;
             app.DC = value;
             if ( strcmpi(value,'Yes') )
-                  app.IntervalsecEditField.Enable = 'On';
-                  app.IntervalsecEditField.Editable = 'On';
+                app.IntervalsecEditField.Enable = 'On';
+                app.IntervalsecEditField.Editable = 'On';
             else
-                  app.IntervalsecEditField.Enable = 'Off';
-                  app.IntervalsecEditField.Editable = 'Off';
+                app.IntervalsecEditField.Enable = 'Off';
+                app.IntervalsecEditField.Editable = 'Off';
             end
+        end
+
+        % Callback function
+        function ProcessButtonPushed(app, event)
+            
         end
 
         % Callback function
@@ -362,8 +379,8 @@ classdef betta_debugged_fixed_exported < matlab.apps.AppBase
         function SeaDropDownValueChanged(app, event)
             value = app.SeaDropDown.Value;
             if strcmp(value,'Select Sea') == 0
-            app.sea = value
-            app.Lamp_3.Color = 'g';
+                app.sea = value
+                app.Lamp_3.Color = 'g';
             end
         end
 
@@ -371,8 +388,8 @@ classdef betta_debugged_fixed_exported < matlab.apps.AppBase
         function StationDropDownValueChanged(app, event)
             value = app.StationDropDown.Value;
             if strcmp(value,'Select Station') == 0
-            app.station = value;
-            app.Lamp_4.Color = 'g';
+                app.station = value;
+                app.Lamp_4.Color = 'g';
             end
         end
 
@@ -380,8 +397,8 @@ classdef betta_debugged_fixed_exported < matlab.apps.AppBase
         function ChannelDropDownValueChanged(app, event)
             value = app.ChannelDropDown.Value;
             if strcmp(value,'Select Channel') == 0
-            app.channel = value;
-            app.Lamp_5.Color = 'g';
+                app.channel = value;
+                app.Lamp_5.Color = 'g';
             end
         end
 
@@ -392,7 +409,7 @@ classdef betta_debugged_fixed_exported < matlab.apps.AppBase
             drawnow;
             figure(app.QCTool)
             app.Lamp.Color = 'g';
-
+            
         end
 
         % Callback function
@@ -403,7 +420,7 @@ classdef betta_debugged_fixed_exported < matlab.apps.AppBase
             drawnow;
             figure(app.QCTool)
             app.Lamp2.Color = 'g';
-            %% enable 
+            %% enable
             app.FiledateEditField.Enable = 'On';
             app.FiledateEditField.Editable = 'On';
         end
@@ -419,12 +436,12 @@ classdef betta_debugged_fixed_exported < matlab.apps.AppBase
             mm = flist(1).name(m:m+1);
             dd = flist(1).name(d:d+1);
             textLabel = [{'The data of the first file in the source directory is:'},...
-                        {[dd,'.',mm,'.20',yy]}];
+                {[dd,'.',mm,'.20',yy]}];
             app.TEXT.Text = textLabel;
             app.yy = y;
             app.mm = m;
             app.dd = d;
-
+            
         end
 
         % Button pushed function: COPYButton
@@ -441,7 +458,7 @@ classdef betta_debugged_fixed_exported < matlab.apps.AppBase
                 h = warndlg('One or more files are allreay existent in target directory!')
                 waitfor(h)
             end
-
+            
         end
 
         % Value changed function: 
@@ -459,18 +476,18 @@ classdef betta_debugged_fixed_exported < matlab.apps.AppBase
 
         % Button pushed function: ViewLogFileButton
         function ViewLogFileButtonPushed(app, event)
-%             rptview(app.log,'pdf')
-winopen(app.log)
+            %             rptview(app.log,'pdf')
+            winopen(app.log)
         end
 
         % Button pushed function: FlagFilesButton
         function FlagFilesButtonPushed(app, event)
-addQCprefix(app.QC,app.path)
+            addQCprefix(app.QC,app.path)
         end
 
         % Button pushed function: RemoveFlagsButton
         function RemoveFlagsButtonPushed(app, event)
-removeQCprefix(app.path)            
+            removeQCprefix(app.path)
         end
 
         % Image clicked function: Image3
@@ -486,7 +503,7 @@ removeQCprefix(app.path)
             waitfor(f);
             if ~isequal(value,'Select...')
                 app.Lamp2.Color = 'g';
-            else 
+            else
                 app.Lamp2.Color = 'r';
                 app.COPYButton.Enable = 'Off';
                 app.FiledateEditField.Enable = 'Off';
@@ -500,7 +517,7 @@ removeQCprefix(app.path)
             winopen(app.TL)
             app.Lamp_8.Color = 'g';
             app.SURESwitch.Enable = 'On';
-
+            
         end
 
         % Callback function
@@ -527,13 +544,13 @@ removeQCprefix(app.path)
 
         % Button pushed function: DELETEButton
         function DELETEButtonPushed(app, event)
-            clear_import(app.sourcedir,app.targetdir,app.sea,app.station,app.channel,app.yy,app.mm,app.dd) 
+            clear_import(app.sourcedir,app.targetdir,app.sea,app.station,app.channel,app.yy,app.mm,app.dd)
         end
 
         % Button pushed function: SearchButton_2
         function SearchButton_2Pushed(app, event)
             [file,app.cal_path] = uigetfile({'*wav','Audio Files (*wav)';'*.*','All Files (*.*)'}, ...
-            'Select File','X:\Meereskunde\Unterwasserschall\AMSO23');   
+                'Select File','X:\Meereskunde\Unterwasserschall\AMSO23');
             drawnow;
             figure(app.QCTool)
             app.Lamp_10.Color = 'g';
@@ -545,33 +562,33 @@ removeQCprefix(app.path)
             app.cal_sr=info.SampleRate;
             xwerte = [1:length(app.cal_signal)]/app.cal_sr;
             plot(app.UIAxes,xwerte(1:100:end),app.cal_signal(1:100:end));
-%             h=msgbox('Please click a valid start end time of the calibation signal in the graphic!');
-%             waitfor(h)
+            %             h=msgbox('Please click a valid start end time of the calibation signal in the graphic!');
+            %             waitfor(h)
             
             
-%             % Set up figure handle visibility, run ginput, and return state
-%             fhv = app.QCTool.HandleVisibility;        % Current status
-%             app.QCTool.HandleVisibility = 'callback'; % Temp change (or, 'on') 
-%             set(0, 'CurrentFigure', app.QCTool)       % Make fig current
-%             [gin_x,~] = ginput(1); 
-%             app.PAT = patch(app.UIAxes,[gin_x(1) gin_x(1) gin_x(1)+30 gin_x(1)+30],[-1 1 1 -1],'m','facealpha',.2,'edgecolor','none');
-%             app.cal_start = gin_x(1);
-%             cal_sample_start = gin_x(1)*app.cal_sr;
-%             cal_sample_end = (gin_x(1)+30)*app.cal_sr;
-%             app.cal_valsig = app.cal_signal(cal_sample_start:cal_sample_end);
-%             
-%                                  % run ginput
-%             app.QCTool.HandleVisibility = fhv;        % return original state
-%             app.ChooseandComputeButton.Enable = 'On';
-%             sample_t        = [1:length(app.cal_signal)]/cal_sr; %s                  % SampleZeit
-%             start_sample    = floor(gin_x(1)/cal_sr);        % start of valid signal in s 
-%             stop_sample     =  ceil(gin_x(2)/cal_sr);       % end of valid signal in s
-% 
-%             time_vector=sample_t(start_sample:stop_sample);
-%             data_vector=app.cal_signal(start_sample:stop_sample);
-%             
-%             plot(app.UIAxes,time_vector,data_vector,'r');
-
+            %             % Set up figure handle visibility, run ginput, and return state
+            %             fhv = app.QCTool.HandleVisibility;        % Current status
+            %             app.QCTool.HandleVisibility = 'callback'; % Temp change (or, 'on')
+            %             set(0, 'CurrentFigure', app.QCTool)       % Make fig current
+            %             [gin_x,~] = ginput(1);
+            %             app.PAT = patch(app.UIAxes,[gin_x(1) gin_x(1) gin_x(1)+30 gin_x(1)+30],[-1 1 1 -1],'m','facealpha',.2,'edgecolor','none');
+            %             app.cal_start = gin_x(1);
+            %             cal_sample_start = gin_x(1)*app.cal_sr;
+            %             cal_sample_end = (gin_x(1)+30)*app.cal_sr;
+            %             app.cal_valsig = app.cal_signal(cal_sample_start:cal_sample_end);
+            %
+            %                                  % run ginput
+            %             app.QCTool.HandleVisibility = fhv;        % return original state
+            %             app.ChooseandComputeButton.Enable = 'On';
+            %             sample_t        = [1:length(app.cal_signal)]/cal_sr; %s                  % SampleZeit
+            %             start_sample    = floor(gin_x(1)/cal_sr);        % start of valid signal in s
+            %             stop_sample     =  ceil(gin_x(2)/cal_sr);       % end of valid signal in s
+            %
+            %             time_vector=sample_t(start_sample:stop_sample);
+            %             data_vector=app.cal_signal(start_sample:stop_sample);
+            %
+            %             plot(app.UIAxes,time_vector,data_vector,'r');
+            
         end
 
         % Button pushed function: OpenBSoundHButton
@@ -596,8 +613,8 @@ removeQCprefix(app.path)
             MM = flist(1).name(M:M+1);
             SS = flist(1).name(S:S+1);
             textLabel = [{'The data of the first file in the source directory is:'},...
-                        {[dd,'.',mm,'.20',yy,' ', HH,':',MM,':',SS '. The renamed file would be:'] }, ...
-                        {[app.station '_' yy mm dd HH MM SS '.wav']}];
+                {[dd,'.',mm,'.20',yy,' ', HH,':',MM,':',SS '. The renamed file would be:'] }, ...
+                {[app.station '_' yy mm dd HH MM SS '.wav']}];
             app.TEXT_2.Text = textLabel;
             app.Jahr = y;
             app.Monat = m;
@@ -632,6 +649,12 @@ removeQCprefix(app.path)
             value = app.AgreeCheckBox.Value;
             if value ==1
                 app.RenametoStandardButton.Enable = 'On'
+                %% activate possibility to remove leading and trailing seconds
+                app.RemoveleadingsecondsofeachfileCheckBox.Enable = 'On';
+                app.RemovetrailingsecondsofeachfileCheckBox.Enable = 'On';
+                app.CheckBox.Enable = 'On';
+                app.CreateCopyEditField.Enable = 'On';
+                app.BrowseButton.Enable = 'On';
             else
                 app.RenametoStandardButton.Enable = 'Off'
             end
@@ -640,10 +663,10 @@ removeQCprefix(app.path)
         % Button pushed function: ChooseandComputeButton
         function ChooseandComputeButtonPushed(app, event)
             fhv = app.QCTool.HandleVisibility;        % Current status
-            app.QCTool.HandleVisibility = 'callback'; % Temp change (or, 'on') 
-            set(0, 'CurrentFigure', app.QCTool)  
+            app.QCTool.HandleVisibility = 'callback'; % Temp change (or, 'on')
+            set(0, 'CurrentFigure', app.QCTool)
             delete(app.PAT)
-            [gin_x,~] = ginput(1); 
+            [gin_x,~] = ginput(1);
             app.PAT = patch(app.UIAxes,[gin_x(1) gin_x(1) gin_x(1)+30 gin_x(1)+30],[-1 1 1 -1],'m','facealpha',.2,'edgecolor','none');
             app.cal_start = gin_x(1);
             cal_sample_start = gin_x(1)*app.cal_sr;
@@ -651,79 +674,79 @@ removeQCprefix(app.path)
             app.cal_valsig = app.cal_signal(cal_sample_start:cal_sample_end);
             app.cal_start = gin_x(1);
             app.Lamp_12.Color = 'g'
-
-        
-        %% calculate
-        S_ref = -212.1 ; % Fest Sensitivität vom Kalibrierer (itap)   
-        U_ref = app.cal_volt;
-        U_ref = double(U_ref);
-        gain_ref = 40; % Fester Verstärkungsfaktor vom itap Kalibrierer
-        L_ref = 20 * log10(U_ref) - gain_ref - S_ref;
-        %% display in app
-        app.SoundPressureinChamberEditField.Value = double(L_ref);
-        %% Calibration dB
-        caldb = L_ref - 20 * log10(std(app.cal_valsig));
-        %% display in app
-        app.CalibrationFactordBEditField.Value = double(caldb);
-        callin = 10^(caldb/20);
-        %% display in app
-        app.linearCalibrationFactorEditField.Value = double(callin);
-        
-        
-        % FFT durchführen, d.h. Funktion fftanalyse aufrufen
-        [freq_axis, data_vector_fft] = fftanalyse(2^15, [1:length(app.cal_valsig)]', 1/app.cal_sr, app.cal_valsig);
-        
-        %% Berechnung des Schalldruckwertes und grafische Ausgabe
-        Lp = 20*log10(data_vector_fft./1*10^(-6));
-        diffe = L_ref-max(Lp);
-        Lp = Lp + diffe;
-        fhv = app.QCTool.HandleVisibility;        % Current status
-        app.QCTool.HandleVisibility = 'callback'; % Temp change (or, 'on') 
-        set(0, 'CurrentFigure', app.QCTool) 
-     
-        plot(app.UIAxes2,freq_axis, Lp);
-        set(app.UIAxes2, 'XScale', 'log') ;
-        set(app.UIAxes2,'YLim',[0 170]);
-        app.QCTool.HandleVisibility = fhv;        % return original state
-        
-        %% mark at which frequency the maximum is found
-        [~,f] = max(Lp);
-        xline(app.UIAxes2,freq_axis(f),'r')
-%         annotation(app.UIAxes2,'textbox',[.2 .5 .3 .3],'String',['Max SPL @ ' num2str(freq_axis(f)) ' Hz'],'FitBoxToText','on');
-        T = text(app.UIAxes2,freq_axis(f)+30,L_ref+1,['Max SPL @ ' num2str(freq_axis(f)) ' Hz'])
-        
-        %% automatically save figure to path
-        h = figure;
-        h.Visible = 'off';
-        x = app.UIAxes2.XAxis.Parent.Children(3).XData;
-        y = app.UIAxes2.XAxis.Parent.Children(3).YData;
-        plot(x,y)
-        xline(freq_axis(f),'r')
-%         annotation('textbox',[.2 .5 .3 .3],'String',['Max SPL @ ' num2str(freq_axis(f)) ' Hz'],'FitBoxToText','on');
-        text(freq_axis(f)+30,L_ref+1,['Max SPL @ ' num2str(freq_axis(f)) ' Hz'])        
-        h.CurrentAxes.YLabel.String = app.UIAxes2.YLabel.String;
-        h.CurrentAxes.YLabel.FontSize = app.UIAxes2.YLabel.FontSize;
-        h.CurrentAxes.XLabel.String = app.UIAxes2.XLabel.String;
-        h.CurrentAxes.XLabel.FontSize = app.UIAxes2.XLabel.FontSize;
-        h.CurrentAxes.XLim = [0 max(x)];
-        h.CurrentAxes.YLim = [0 170];
-        h.CurrentAxes.XScale = 'log';
-        print(h,[app.cal_path datestr(now,'yymmdd') '_Calibration_Spectrum.png'],'-dpng','-r300');
-        delete(h)
-        
-        %% automatically save calibration curve as .mat
-        save([app.cal_path datestr(now,'yymmdd') '_Calibration_Curve.mat'],'freq_axis','Lp')
-        
-        %% automatically save results to .txt
-        fp = fopen([app.cal_path datestr(now,'yymmdd') '_Calibration_Results.txt'],'w');
-        fprintf(fp, '%s\n\n','Calibration Results');
-        fprintf(fp, '%s\n',['The sound pressure level in calibration chamber in dB re 1 µPa: ' num2str(L_ref)]);
-        fprintf(fp, '%s\n',['The calibration level in dB/V: ' num2str(caldb) ]);
-        fprintf(fp, '%s\n',['The linear calibration level in µPa/V: ' num2str(callin)]);
-        fclose(fp)
-        
-        %% write output to results tab
-        
+            
+            
+            %% calculate
+            S_ref = -212.1 ; % Fest Sensitivität vom Kalibrierer (itap)
+            U_ref = app.cal_volt;
+            U_ref = double(U_ref);
+            gain_ref = 40; % Fester Verstärkungsfaktor vom itap Kalibrierer
+            L_ref = 20 * log10(U_ref) - gain_ref - S_ref;
+            %% display in app
+            app.SoundPressureinChamberEditField.Value = double(L_ref);
+            %% Calibration dB
+            caldb = L_ref - 20 * log10(std(app.cal_valsig));
+            %% display in app
+            app.CalibrationFactordBEditField.Value = double(caldb);
+            callin = 10^(caldb/20);
+            %% display in app
+            app.linearCalibrationFactorEditField.Value = double(callin);
+            
+            
+            % FFT durchführen, d.h. Funktion fftanalyse aufrufen
+            [freq_axis, data_vector_fft] = fftanalyse(2^15, [1:length(app.cal_valsig)]', 1/app.cal_sr, app.cal_valsig);
+            
+            %% Berechnung des Schalldruckwertes und grafische Ausgabe
+            Lp = 20*log10(data_vector_fft./1*10^(-6));
+            diffe = L_ref-max(Lp);
+            Lp = Lp + diffe;
+            fhv = app.QCTool.HandleVisibility;        % Current status
+            app.QCTool.HandleVisibility = 'callback'; % Temp change (or, 'on')
+            set(0, 'CurrentFigure', app.QCTool)
+            
+            plot(app.UIAxes2,freq_axis, Lp);
+            set(app.UIAxes2, 'XScale', 'log') ;
+            set(app.UIAxes2,'YLim',[0 170]);
+            app.QCTool.HandleVisibility = fhv;        % return original state
+            
+            %% mark at which frequency the maximum is found
+            [~,f] = max(Lp);
+            xline(app.UIAxes2,freq_axis(f),'r')
+            %         annotation(app.UIAxes2,'textbox',[.2 .5 .3 .3],'String',['Max SPL @ ' num2str(freq_axis(f)) ' Hz'],'FitBoxToText','on');
+            T = text(app.UIAxes2,freq_axis(f)+30,L_ref+1,['Max SPL @ ' num2str(freq_axis(f)) ' Hz'])
+            
+            %% automatically save figure to path
+            h = figure;
+            h.Visible = 'off';
+            x = app.UIAxes2.XAxis.Parent.Children(3).XData;
+            y = app.UIAxes2.XAxis.Parent.Children(3).YData;
+            plot(x,y)
+            xline(freq_axis(f),'r')
+            %         annotation('textbox',[.2 .5 .3 .3],'String',['Max SPL @ ' num2str(freq_axis(f)) ' Hz'],'FitBoxToText','on');
+            text(freq_axis(f)+30,L_ref+1,['Max SPL @ ' num2str(freq_axis(f)) ' Hz'])
+            h.CurrentAxes.YLabel.String = app.UIAxes2.YLabel.String;
+            h.CurrentAxes.YLabel.FontSize = app.UIAxes2.YLabel.FontSize;
+            h.CurrentAxes.XLabel.String = app.UIAxes2.XLabel.String;
+            h.CurrentAxes.XLabel.FontSize = app.UIAxes2.XLabel.FontSize;
+            h.CurrentAxes.XLim = [0 max(x)];
+            h.CurrentAxes.YLim = [0 170];
+            h.CurrentAxes.XScale = 'log';
+            print(h,[app.cal_path datestr(now,'yymmdd') '_Calibration_Spectrum.png'],'-dpng','-r300');
+            delete(h)
+            
+            %% automatically save calibration curve as .mat
+            save([app.cal_path datestr(now,'yymmdd') '_Calibration_Curve.mat'],'freq_axis','Lp')
+            
+            %% automatically save results to .txt
+            fp = fopen([app.cal_path datestr(now,'yymmdd') '_Calibration_Results.txt'],'w');
+            fprintf(fp, '%s\n\n','Calibration Results');
+            fprintf(fp, '%s\n',['The sound pressure level in calibration chamber in dB re 1 µPa: ' num2str(L_ref)]);
+            fprintf(fp, '%s\n',['The calibration level in dB/V: ' num2str(caldb) ]);
+            fprintf(fp, '%s\n',['The linear calibration level in µPa/V: ' num2str(callin)]);
+            fclose(fp)
+            
+            %% write output to results tab
+            
             
         end
 
@@ -731,7 +754,7 @@ removeQCprefix(app.path)
         function RMSVoltageVEditFieldValueChanged(app, event)
             app.cal_volt = app.RMSVoltageVEditField.Value;
             if app.cal_volt < 0.15 || app.cal_volt > 0.3
-               warndlg(['The entered voltage is unrealistic. Please recheck! ... Volltrottel -.-'])
+                warndlg(['The entered voltage is unrealistic. Please recheck! ... Volltrottel -.-'])
             else
                 app.Lamp_11.Color = 'g';
             end
@@ -742,83 +765,169 @@ removeQCprefix(app.path)
 
         % Callback function
         function ComputeButtonPushed(app, event)
-        % Check if all necessary input parameters exist
-        
-        %% calculate
-        S_ref = -212.1 ; % Fest Sensitivität vom Kalibrierer (itap)   
-        U_ref = app.cal_volt;
-        U_ref = double(U_ref);
-        gain_ref = 40; % Fester Verstärkungsfaktor vom itap Kalibrierer
-        L_ref = 20 * log10(U_ref) - gain_ref - S_ref;
-        %% display in app
-        app.SoundPressureinChamberEditField.Value = double(L_ref);
-        %% Calibration dB
-        caldb = L_ref - 20 * log10(std(app.cal_valsig));
-        %% display in app
-        app.CalibrationFactordBEditField.Value = double(caldb);
-        callin = 10^(caldb/20);
-        %% display in app
-        app.linearCalibrationFactorEditField.Value = double(callin);
-        
-        
-        % FFT durchführen, d.h. Funktion fftanalyse aufrufen
-        [freq_axis, data_vector_fft] = fftanalyse(2^15, [1:length(app.cal_valsig)]', 1/app.cal_sr, app.cal_valsig);
-        
-        %% Berechnung des Schalldruckwertes und grafische Ausgabe
-        Lp = 20*log10(data_vector_fft./1*10^(-6));
-        diffe = L_ref-max(Lp);
-        Lp = Lp + diffe;
-        fhv = app.QCTool.HandleVisibility;        % Current status
-        app.QCTool.HandleVisibility = 'callback'; % Temp change (or, 'on') 
-        set(0, 'CurrentFigure', app.QCTool) 
-     
-        plot(app.UIAxes2,freq_axis, Lp);
-        set(app.UIAxes2, 'XScale', 'log') ;
-        set(app.UIAxes2,'YLim',[0 170]);
-        app.QCTool.HandleVisibility = fhv;        % return original state
-        
-        %% mark at which frequency the maximum is found
-        [~,f] = max(Lp);
-        xline(app.UIAxes2,freq_axis(f),'r')
-%         annotation(app.UIAxes2,'textbox',[.2 .5 .3 .3],'String',['Max SPL @ ' num2str(freq_axis(f)) ' Hz'],'FitBoxToText','on');
-        text(app.UIAxes2,freq_axis(f)+30,L_ref+1,['Max SPL @ ' num2str(freq_axis(f)) ' Hz'])
-        
-        %% automatically save figure to path
-        h = figure;
-        h.Visible = 'off';
-        x = app.UIAxes2.XAxis.Parent.Children(3).XData;
-        y = app.UIAxes2.XAxis.Parent.Children(3).YData;
-        plot(x,y)
-        xline(freq_axis(f),'r')
-%         annotation('textbox',[.2 .5 .3 .3],'String',['Max SPL @ ' num2str(freq_axis(f)) ' Hz'],'FitBoxToText','on');
-        text(freq_axis(f)+30,L_ref+1,['Max SPL @ ' num2str(freq_axis(f)) ' Hz'])        
-        h.CurrentAxes.YLabel.String = app.UIAxes2.YLabel.String;
-        h.CurrentAxes.YLabel.FontSize = app.UIAxes2.YLabel.FontSize;
-        h.CurrentAxes.XLabel.String = app.UIAxes2.XLabel.String;
-        h.CurrentAxes.XLabel.FontSize = app.UIAxes2.XLabel.FontSize;
-        h.CurrentAxes.XLim = [0 max(x)];
-        h.CurrentAxes.YLim = [0 170];
-        h.CurrentAxes.XScale = 'log';
-        print(h,[app.cal_path datestr(now,'yymmdd') '_Calibration_Spectrum.png'],'-dpng','-r300');
-        delete(h)
-        
-        %% automatically save calibration curve as .mat
-        save([app.cal_path datestr(now,'yymmdd') '_Calibration_Curve.mat'],'freq_axis','Lp')
-        
-        %% automatically save results to .txt
-        fp = fopen([app.cal_path datestr(now,'yymmdd') '_Calibration_Results.txt'],'w');
-        fprintf(fp, '%s\n\n','Calibration Results');
-        fprintf(fp, '%s\n',['The sound pressure level in calibration chamber in dB re 1 µPa: ' num2str(L_ref)]);
-        fprintf(fp, '%s\n',['The calibration level in dB/V: ' num2str(caldb) ]);
-        fprintf(fp, '%s\n',['The linear calibration level in µPa/V: ' num2str(callin)]);
-        fclose(fp)
+            % Check if all necessary input parameters exist
+            
+            %% calculate
+            S_ref = -212.1 ; % Fest Sensitivität vom Kalibrierer (itap)
+            U_ref = app.cal_volt;
+            U_ref = double(U_ref);
+            gain_ref = 40; % Fester Verstärkungsfaktor vom itap Kalibrierer
+            L_ref = 20 * log10(U_ref) - gain_ref - S_ref;
+            %% display in app
+            app.SoundPressureinChamberEditField.Value = double(L_ref);
+            %% Calibration dB
+            caldb = L_ref - 20 * log10(std(app.cal_valsig));
+            %% display in app
+            app.CalibrationFactordBEditField.Value = double(caldb);
+            callin = 10^(caldb/20);
+            %% display in app
+            app.linearCalibrationFactorEditField.Value = double(callin);
+            
+            
+            % FFT durchführen, d.h. Funktion fftanalyse aufrufen
+            [freq_axis, data_vector_fft] = fftanalyse(2^15, [1:length(app.cal_valsig)]', 1/app.cal_sr, app.cal_valsig);
+            
+            %% Berechnung des Schalldruckwertes und grafische Ausgabe
+            Lp = 20*log10(data_vector_fft./1*10^(-6));
+            diffe = L_ref-max(Lp);
+            Lp = Lp + diffe;
+            fhv = app.QCTool.HandleVisibility;        % Current status
+            app.QCTool.HandleVisibility = 'callback'; % Temp change (or, 'on')
+            set(0, 'CurrentFigure', app.QCTool)
+            
+            plot(app.UIAxes2,freq_axis, Lp);
+            set(app.UIAxes2, 'XScale', 'log') ;
+            set(app.UIAxes2,'YLim',[0 170]);
+            app.QCTool.HandleVisibility = fhv;        % return original state
+            
+            %% mark at which frequency the maximum is found
+            [~,f] = max(Lp);
+            xline(app.UIAxes2,freq_axis(f),'r')
+            %         annotation(app.UIAxes2,'textbox',[.2 .5 .3 .3],'String',['Max SPL @ ' num2str(freq_axis(f)) ' Hz'],'FitBoxToText','on');
+            text(app.UIAxes2,freq_axis(f)+30,L_ref+1,['Max SPL @ ' num2str(freq_axis(f)) ' Hz'])
+            
+            %% automatically save figure to path
+            h = figure;
+            h.Visible = 'off';
+            x = app.UIAxes2.XAxis.Parent.Children(3).XData;
+            y = app.UIAxes2.XAxis.Parent.Children(3).YData;
+            plot(x,y)
+            xline(freq_axis(f),'r')
+            %         annotation('textbox',[.2 .5 .3 .3],'String',['Max SPL @ ' num2str(freq_axis(f)) ' Hz'],'FitBoxToText','on');
+            text(freq_axis(f)+30,L_ref+1,['Max SPL @ ' num2str(freq_axis(f)) ' Hz'])
+            h.CurrentAxes.YLabel.String = app.UIAxes2.YLabel.String;
+            h.CurrentAxes.YLabel.FontSize = app.UIAxes2.YLabel.FontSize;
+            h.CurrentAxes.XLabel.String = app.UIAxes2.XLabel.String;
+            h.CurrentAxes.XLabel.FontSize = app.UIAxes2.XLabel.FontSize;
+            h.CurrentAxes.XLim = [0 max(x)];
+            h.CurrentAxes.YLim = [0 170];
+            h.CurrentAxes.XScale = 'log';
+            print(h,[app.cal_path datestr(now,'yymmdd') '_Calibration_Spectrum.png'],'-dpng','-r300');
+            delete(h)
+            
+            %% automatically save calibration curve as .mat
+            save([app.cal_path datestr(now,'yymmdd') '_Calibration_Curve.mat'],'freq_axis','Lp')
+            
+            %% automatically save results to .txt
+            fp = fopen([app.cal_path datestr(now,'yymmdd') '_Calibration_Results.txt'],'w');
+            fprintf(fp, '%s\n\n','Calibration Results');
+            fprintf(fp, '%s\n',['The sound pressure level in calibration chamber in dB re 1 µPa: ' num2str(L_ref)]);
+            fprintf(fp, '%s\n',['The calibration level in dB/V: ' num2str(caldb) ]);
+            fprintf(fp, '%s\n',['The linear calibration level in µPa/V: ' num2str(callin)]);
+            fclose(fp)
         end
 
         % Menu selected function: HelpMenu
         function HelpMenuSelected(app, event)
-%             ! X:\Meereskunde\Unterwasserschall\HDF5_Testdaten_Skripte\Skripte\Matlabskripte\QC_toolbox\libs\Wikilogin.bat
+            %             ! X:\Meereskunde\Unterwasserschall\HDF5_Testdaten_Skripte\Skripte\Matlabskripte\QC_toolbox\libs\Wikilogin.bat
             %             dos ('"C:\Program Files\Internet Explorer\iexplore.exe" -extoff http://linwiki-uschall10.srx.bsh.de/mediawiki/index.php/Quality_Checks');
-                        dos('explorer http://linwiki-uschall10.srx.bsh.de/mediawiki/index.php/Quality_Checks');
+            dos('explorer http://linwiki-uschall10.srx.bsh.de/mediawiki/index.php/Quality_Checks');
+        end
+
+        % Value changed function: 
+        % RemoveleadingsecondsofeachfileCheckBox
+        function RemoveleadingsecondsofeachfileCheckBoxValueChanged(app, event)
+            value = app.RemoveleadingsecondsofeachfileCheckBox.Value;
+            if value == 1
+                app.leadsecseditfield.Enable = 'On';
+                app.leadsecseditfield.Editable = 'On';
+                app.secondsLabel.Enable = 'On';
+            elseif value == 0
+                app.leadsecseditfield.Enable = 'Off';
+                app.leadsecseditfield.Editable = 'Off';
+                app.secondsLabel.Enable = 'Off';
+            end
+        end
+
+        % Value changed function: 
+        % RemovetrailingsecondsofeachfileCheckBox
+        function RemovetrailingsecondsofeachfileCheckBoxValueChanged(app, event)
+            value = app.RemovetrailingsecondsofeachfileCheckBox.Value;
+            if value == 1
+                app.trailsecseditfield.Enable = 'On';
+                app.trailsecseditfield.Editable = 'On';
+                app.secondsLabel_2.Enable = 'On';
+            elseif value == 0
+                app.trailsecseditfield.Enable = 'Off';
+                app.trailsecseditfield.Editable = 'Off';
+                app.secondsLabel_2.Enable = 'Off';
+            end
+        end
+
+        % Button pushed function: CutButton
+        function CutButtonPushed(app, event)
+            %% Check whether parallel computing toolbox is available
+            para = license('test','Distrib_Computing_Toolbox');
+            flist = dir([app.path,'*.wav']);
+            if  (app.leadsecs ~= 0 || app.trailsecs ~= 0)
+                if para == 1
+                        probar = parfor_progressbar(length(flist),'Removing leading and/or trailing seconds of .wav files ...');  %create the progress bar
+                        paracutsec(probar, app.path, flist, app.copypath, app.leadsecs, app.trailsecs)
+                        close(probar);
+                else
+                        probar = uiprogressdlg( app.QCTool, 'Title', 'Progress', 'Message', 'Removing leading and/or trailing seconds of .wav files ...', 'Value', 0);
+                        cutsec(probar, app.path, flist, app.copypath, app.leadsecs, app.trailsecs)
+                end
+            end
+        end
+
+        % Button pushed function: BrowseButton
+        function BrowseButtonPushed(app, event)
+            % get path where copy of cut files is saved
+            app.copypath = uigetdir('G:\');
+            % bring back app to top
+            drawnow;
+            figure(app.QCTool)
+            % write copypath to EditField
+            app.CreateCopyEditField.Value = [app.copypath '\'];
+            app.CutButton.Enable = 'On';
+        end
+
+        % Value changed function: CreateCopyEditField
+        function CreateCopyEditFieldValueChanged(app, event)
+            app.copypath = app.CreateCopyEditField.Value;        
+        end
+
+        % Value changed function: leadsecseditfield
+        function leadsecseditfieldValueChanged(app, event)
+            app.leadsecs = double(app.leadsecseditfield.Value);
+            
+        end
+
+        % Value changed function: trailsecseditfield
+        function trailsecseditfieldValueChanged(app, event)
+            app.trailsecs = double(app.trailsecseditfield.Value);
+            
+        end
+
+        % Value changed function: CheckBox
+        function CheckBoxValueChanged(app, event)
+            value = app.CheckBox.Value;
+            if value == 0
+                app.CutButton.Enable = 'On';
+            elseif value ==1 && strcmp(app.copypath,'null')
+                app.CutButton.Enable = 'Off';
+            end
         end
     end
 
@@ -832,7 +941,7 @@ removeQCprefix(app.path)
             app.QCTool = uifigure('Visible', 'off');
             app.QCTool.IntegerHandle = 'on';
             app.QCTool.Color = [0.0745 0.6235 1];
-            app.QCTool.Position = [600 400 329 631];
+            app.QCTool.Position = [600 400 623 632];
             app.QCTool.Name = 'QCTool';
             app.QCTool.Icon = 'index2.png';
             app.QCTool.Resize = 'off';
@@ -848,7 +957,7 @@ removeQCprefix(app.path)
 
             % Create TabGroup
             app.TabGroup = uitabgroup(app.QCTool);
-            app.TabGroup.Position = [1 1 329 631];
+            app.TabGroup.Position = [1 2 623 631];
 
             % Create QCTab
             app.QCTab = uitab(app.TabGroup);
@@ -860,20 +969,20 @@ removeQCprefix(app.path)
             app.SettingsPanel.ForegroundColor = [1 1 1];
             app.SettingsPanel.Title = 'Settings';
             app.SettingsPanel.BackgroundColor = [0 0.3294 0.6];
-            app.SettingsPanel.Position = [16 377 295 217];
+            app.SettingsPanel.Position = [16 395 295 205];
 
             % Create RawDataButton
             app.RawDataButton = uibutton(app.SettingsPanel, 'push');
             app.RawDataButton.ButtonPushedFcn = createCallbackFcn(app, @RawDataButtonPushed, true);
             app.RawDataButton.Tooltip = {'select path to raw .wav files'};
-            app.RawDataButton.Position = [93 157 106 22];
+            app.RawDataButton.Position = [89 155 81 22];
             app.RawDataButton.Text = 'Raw Data';
 
             % Create DeploymentDatePickerLabel
             app.DeploymentDatePickerLabel = uilabel(app.SettingsPanel);
             app.DeploymentDatePickerLabel.HorizontalAlignment = 'right';
             app.DeploymentDatePickerLabel.FontColor = [1 1 1];
-            app.DeploymentDatePickerLabel.Position = [4 100 70 22];
+            app.DeploymentDatePickerLabel.Position = [4 98 70 22];
             app.DeploymentDatePickerLabel.Text = 'Deployment';
 
             % Create DeploymentDatePicker
@@ -881,13 +990,13 @@ removeQCprefix(app.path)
             app.DeploymentDatePicker.Limits = [datetime([2013 1 12]) datetime([2099 12 31])];
             app.DeploymentDatePicker.ValueChangedFcn = createCallbackFcn(app, @DeploymentDatePickerValueChanged, true);
             app.DeploymentDatePicker.Tooltip = {'select date, when hydrophone was deployed'};
-            app.DeploymentDatePicker.Position = [93 100 106 22];
+            app.DeploymentDatePicker.Position = [89 98 106 22];
 
             % Create RecoveryDatePickerLabel
             app.RecoveryDatePickerLabel = uilabel(app.SettingsPanel);
             app.RecoveryDatePickerLabel.HorizontalAlignment = 'right';
             app.RecoveryDatePickerLabel.FontColor = [1 1 1];
-            app.RecoveryDatePickerLabel.Position = [4 69 56 22];
+            app.RecoveryDatePickerLabel.Position = [4 67 56 22];
             app.RecoveryDatePickerLabel.Text = 'Recovery';
 
             % Create RecoveryDatePicker
@@ -895,28 +1004,28 @@ removeQCprefix(app.path)
             app.RecoveryDatePicker.ValueChangedFcn = createCallbackFcn(app, @RecoveryDatePickerValueChanged, true);
             app.RecoveryDatePicker.FontColor = [0.149 0.149 0.149];
             app.RecoveryDatePicker.Tooltip = {'select date, when hydrophone was recovered'};
-            app.RecoveryDatePicker.Position = [93 69 106 22];
+            app.RecoveryDatePicker.Position = [89 67 106 22];
 
             % Create StationnameDropDownLabel
             app.StationnameDropDownLabel = uilabel(app.SettingsPanel);
             app.StationnameDropDownLabel.HorizontalAlignment = 'right';
             app.StationnameDropDownLabel.FontColor = [1 1 1];
-            app.StationnameDropDownLabel.Position = [4 39 76 22];
+            app.StationnameDropDownLabel.Position = [4 37 76 22];
             app.StationnameDropDownLabel.Text = 'Station name';
 
             % Create StationnameDropDown
             app.StationnameDropDown = uidropdown(app.SettingsPanel);
-            app.StationnameDropDown.Items = {'Select Staion', 'ARK', 'ES1', 'FEB', 'FN1', 'FN3', 'LTK'};
+            app.StationnameDropDown.Items = {'Select Station', 'ARK', 'ES1', 'FEB', 'FN1', 'FN3', 'LTK'};
             app.StationnameDropDown.ValueChangedFcn = createCallbackFcn(app, @StationnameDropDownValueChanged, true);
             app.StationnameDropDown.Tooltip = {'select hyfrophone station'};
-            app.StationnameDropDown.Position = [93 39 106 22];
-            app.StationnameDropDown.Value = 'Select Staion';
+            app.StationnameDropDown.Position = [89 37 106 22];
+            app.StationnameDropDown.Value = 'Select Station';
 
             % Create FileDurationEditFieldLabel
             app.FileDurationEditFieldLabel = uilabel(app.SettingsPanel);
             app.FileDurationEditFieldLabel.HorizontalAlignment = 'right';
             app.FileDurationEditFieldLabel.FontColor = [1 1 1];
-            app.FileDurationEditFieldLabel.Position = [4 10 74 22];
+            app.FileDurationEditFieldLabel.Position = [4 8 74 22];
             app.FileDurationEditFieldLabel.Text = 'File Duration';
 
             % Create FileDurationEditField
@@ -925,27 +1034,27 @@ removeQCprefix(app.path)
             app.FileDurationEditField.ValueDisplayFormat = '%.2f';
             app.FileDurationEditField.ValueChangedFcn = createCallbackFcn(app, @FileDurationEditFieldValueChanged, true);
             app.FileDurationEditField.Tooltip = {'enter duration of each recording in seconds'};
-            app.FileDurationEditField.Position = [93 10 83 22];
+            app.FileDurationEditField.Position = [89 8 83 22];
 
             % Create GetfromfirstfileButton
             app.GetfromfirstfileButton = uibutton(app.SettingsPanel, 'push');
             app.GetfromfirstfileButton.ButtonPushedFcn = createCallbackFcn(app, @GetfromfirstfileButtonPushed, true);
             app.GetfromfirstfileButton.Tooltip = {'get duration from first file in Path > 5min - is done automatically if File Duration is set to 0'};
-            app.GetfromfirstfileButton.Position = [182 10 104 22];
+            app.GetfromfirstfileButton.Position = [186 8 104 22];
             app.GetfromfirstfileButton.Text = 'Get from first file';
 
             % Create QCfilesButton
             app.QCfilesButton = uibutton(app.SettingsPanel, 'push');
             app.QCfilesButton.ButtonPushedFcn = createCallbackFcn(app, @QCfilesButtonPushed, true);
             app.QCfilesButton.Tooltip = {'select path, where qc-log  .pdf shall be stored'};
-            app.QCfilesButton.Position = [93 129 106 22];
+            app.QCfilesButton.Position = [89 127 106 22];
             app.QCfilesButton.Text = 'QC files';
 
             % Create HourSpinnerLabel
             app.HourSpinnerLabel = uilabel(app.SettingsPanel);
             app.HourSpinnerLabel.HorizontalAlignment = 'right';
             app.HourSpinnerLabel.FontColor = [1 1 1];
-            app.HourSpinnerLabel.Position = [197 100 32 22];
+            app.HourSpinnerLabel.Position = [197 98 32 22];
             app.HourSpinnerLabel.Text = 'Hour';
 
             % Create HourSpinner
@@ -953,13 +1062,13 @@ removeQCprefix(app.path)
             app.HourSpinner.Limits = [0 24];
             app.HourSpinner.ValueChangedFcn = createCallbackFcn(app, @HourSpinnerValueChanged, true);
             app.HourSpinner.Tooltip = {'select hour of the day (0-24), when hydrophone was deployed'};
-            app.HourSpinner.Position = [234 100 46 22];
+            app.HourSpinner.Position = [234 98 46 22];
 
             % Create HourSpinner_2Label
             app.HourSpinner_2Label = uilabel(app.SettingsPanel);
             app.HourSpinner_2Label.HorizontalAlignment = 'right';
             app.HourSpinner_2Label.FontColor = [1 1 1];
-            app.HourSpinner_2Label.Position = [197 69 32 22];
+            app.HourSpinner_2Label.Position = [197 67 32 22];
             app.HourSpinner_2Label.Text = 'Hour';
 
             % Create HourSpinner_2
@@ -967,30 +1076,30 @@ removeQCprefix(app.path)
             app.HourSpinner_2.Limits = [0 24];
             app.HourSpinner_2.ValueChangedFcn = createCallbackFcn(app, @HourSpinner_2ValueChanged, true);
             app.HourSpinner_2.Tooltip = {'select hour of the day (0-24), when hydrophone was recovered'};
-            app.HourSpinner_2.Position = [235 69 45 22];
+            app.HourSpinner_2.Position = [235 67 45 22];
 
             % Create Lamp_6
             app.Lamp_6 = uilamp(app.SettingsPanel);
-            app.Lamp_6.Position = [257 158 20 20];
+            app.Lamp_6.Position = [257 156 20 20];
             app.Lamp_6.Color = [1 0 0];
 
             % Create Lamp_7
             app.Lamp_7 = uilamp(app.SettingsPanel);
-            app.Lamp_7.Position = [257 130 20 20];
+            app.Lamp_7.Position = [257 128 20 20];
             app.Lamp_7.Color = [1 0 0];
 
             % Create DeploymentDatePickerLabel_2
             app.DeploymentDatePickerLabel_2 = uilabel(app.SettingsPanel);
             app.DeploymentDatePickerLabel_2.HorizontalAlignment = 'right';
             app.DeploymentDatePickerLabel_2.FontColor = [1 1 1];
-            app.DeploymentDatePickerLabel_2.Position = [4 157 66 22];
+            app.DeploymentDatePickerLabel_2.Position = [4 155 66 22];
             app.DeploymentDatePickerLabel_2.Text = 'Select path';
 
             % Create DeploymentDatePickerLabel_3
             app.DeploymentDatePickerLabel_3 = uilabel(app.SettingsPanel);
             app.DeploymentDatePickerLabel_3.HorizontalAlignment = 'right';
             app.DeploymentDatePickerLabel_3.FontColor = [1 1 1];
-            app.DeploymentDatePickerLabel_3.Position = [4 129 66 22];
+            app.DeploymentDatePickerLabel_3.Position = [4 127 66 22];
             app.DeploymentDatePickerLabel_3.Text = 'Select path';
 
             % Create DutyCyclePanel
@@ -998,7 +1107,7 @@ removeQCprefix(app.path)
             app.DutyCyclePanel.ForegroundColor = [1 1 1];
             app.DutyCyclePanel.Title = 'Duty Cycle';
             app.DutyCyclePanel.BackgroundColor = [0 0.3294 0.6];
-            app.DutyCyclePanel.Position = [16 241 179 129];
+            app.DutyCyclePanel.Position = [16 257 179 129];
 
             % Create DutyCycleSwitchLabel
             app.DutyCycleSwitchLabel = uilabel(app.DutyCyclePanel);
@@ -1041,7 +1150,7 @@ removeQCprefix(app.path)
 
             % Create Image
             app.Image = uiimage(app.QCTab);
-            app.Image.Position = [204 234 108 144];
+            app.Image.Position = [204 248 108 144];
             app.Image.ImageSource = 'index2.png';
 
             % Create RUNButton
@@ -1053,7 +1162,7 @@ removeQCprefix(app.path)
             app.RUNButton.FontColor = [1 1 1];
             app.RUNButton.Enable = 'off';
             app.RUNButton.Tooltip = {'run quality control and save results to pdf'};
-            app.RUNButton.Position = [16 33 295 64];
+            app.RUNButton.Position = [16 35 295 73];
             app.RUNButton.Text = 'RUN';
 
             % Create FlagFilesButton
@@ -1088,7 +1197,7 @@ removeQCprefix(app.path)
             app.GetdatetimePanel_2.ForegroundColor = [1 1 1];
             app.GetdatetimePanel_2.Title = 'Get datetime';
             app.GetdatetimePanel_2.BackgroundColor = [0 0.3294 0.6];
-            app.GetdatetimePanel_2.Position = [16 104 295 131];
+            app.GetdatetimePanel_2.Position = [318 469 295 131];
 
             % Create TEXT_2
             app.TEXT_2 = uilabel(app.GetdatetimePanel_2);
@@ -1127,6 +1236,95 @@ removeQCprefix(app.path)
             app.AgreeCheckBox.FontColor = [1 1 1];
             app.AgreeCheckBox.Position = [9 7 57 22];
 
+            % Create RemovalofleadingandtrailingsecondsPanel
+            app.RemovalofleadingandtrailingsecondsPanel = uipanel(app.QCTab);
+            app.RemovalofleadingandtrailingsecondsPanel.ForegroundColor = [1 1 1];
+            app.RemovalofleadingandtrailingsecondsPanel.Title = 'Removal of leading and trailing seconds';
+            app.RemovalofleadingandtrailingsecondsPanel.BackgroundColor = [0 0.3294 0.6];
+            app.RemovalofleadingandtrailingsecondsPanel.Position = [318 202 295 257];
+
+            % Create RemoveleadingsecondsofeachfileCheckBox
+            app.RemoveleadingsecondsofeachfileCheckBox = uicheckbox(app.RemovalofleadingandtrailingsecondsPanel);
+            app.RemoveleadingsecondsofeachfileCheckBox.ValueChangedFcn = createCallbackFcn(app, @RemoveleadingsecondsofeachfileCheckBoxValueChanged, true);
+            app.RemoveleadingsecondsofeachfileCheckBox.Enable = 'off';
+            app.RemoveleadingsecondsofeachfileCheckBox.Tooltip = {'Removal of first two seconds might be necessary when processing data from ST600 to remove click sounds'};
+            app.RemoveleadingsecondsofeachfileCheckBox.Text = 'Remove leading seconds of each file';
+            app.RemoveleadingsecondsofeachfileCheckBox.FontColor = [1 1 1];
+            app.RemoveleadingsecondsofeachfileCheckBox.Position = [11 209 219 22];
+
+            % Create leadsecseditfield
+            app.leadsecseditfield = uieditfield(app.RemovalofleadingandtrailingsecondsPanel, 'numeric');
+            app.leadsecseditfield.ValueChangedFcn = createCallbackFcn(app, @leadsecseditfieldValueChanged, true);
+            app.leadsecseditfield.Editable = 'off';
+            app.leadsecseditfield.Enable = 'off';
+            app.leadsecseditfield.Position = [140 183 42 22];
+
+            % Create secondsLabel
+            app.secondsLabel = uilabel(app.RemovalofleadingandtrailingsecondsPanel);
+            app.secondsLabel.FontColor = [1 1 1];
+            app.secondsLabel.Enable = 'off';
+            app.secondsLabel.Position = [194 183 50 22];
+            app.secondsLabel.Text = 'seconds';
+
+            % Create RemovetrailingsecondsofeachfileCheckBox
+            app.RemovetrailingsecondsofeachfileCheckBox = uicheckbox(app.RemovalofleadingandtrailingsecondsPanel);
+            app.RemovetrailingsecondsofeachfileCheckBox.ValueChangedFcn = createCallbackFcn(app, @RemovetrailingsecondsofeachfileCheckBoxValueChanged, true);
+            app.RemovetrailingsecondsofeachfileCheckBox.Enable = 'off';
+            app.RemovetrailingsecondsofeachfileCheckBox.Text = 'Remove trailing seconds of each file';
+            app.RemovetrailingsecondsofeachfileCheckBox.FontColor = [1 1 1];
+            app.RemovetrailingsecondsofeachfileCheckBox.Position = [11 155 216 22];
+
+            % Create trailsecseditfield
+            app.trailsecseditfield = uieditfield(app.RemovalofleadingandtrailingsecondsPanel, 'numeric');
+            app.trailsecseditfield.ValueChangedFcn = createCallbackFcn(app, @trailsecseditfieldValueChanged, true);
+            app.trailsecseditfield.Editable = 'off';
+            app.trailsecseditfield.Enable = 'off';
+            app.trailsecseditfield.Position = [140 129 42 22];
+
+            % Create secondsLabel_2
+            app.secondsLabel_2 = uilabel(app.RemovalofleadingandtrailingsecondsPanel);
+            app.secondsLabel_2.FontColor = [1 1 1];
+            app.secondsLabel_2.Enable = 'off';
+            app.secondsLabel_2.Position = [194 129 50 22];
+            app.secondsLabel_2.Text = 'seconds';
+
+            % Create CutButton
+            app.CutButton = uibutton(app.RemovalofleadingandtrailingsecondsPanel, 'push');
+            app.CutButton.ButtonPushedFcn = createCallbackFcn(app, @CutButtonPushed, true);
+            app.CutButton.Enable = 'off';
+            app.CutButton.Position = [180 60 100 22];
+            app.CutButton.Text = 'Cut';
+
+            % Create CreateCopyEditFieldLabel
+            app.CreateCopyEditFieldLabel = uilabel(app.RemovalofleadingandtrailingsecondsPanel);
+            app.CreateCopyEditFieldLabel.HorizontalAlignment = 'right';
+            app.CreateCopyEditFieldLabel.FontColor = [1 1 1];
+            app.CreateCopyEditFieldLabel.Enable = 'off';
+            app.CreateCopyEditFieldLabel.Position = [22 97 73 22];
+            app.CreateCopyEditFieldLabel.Text = 'Create Copy';
+
+            % Create CreateCopyEditField
+            app.CreateCopyEditField = uieditfield(app.RemovalofleadingandtrailingsecondsPanel, 'text');
+            app.CreateCopyEditField.ValueChangedFcn = createCallbackFcn(app, @CreateCopyEditFieldValueChanged, true);
+            app.CreateCopyEditField.Editable = 'off';
+            app.CreateCopyEditField.Position = [107 97 100 22];
+            app.CreateCopyEditField.Value = 'Select directory';
+
+            % Create CheckBox
+            app.CheckBox = uicheckbox(app.RemovalofleadingandtrailingsecondsPanel);
+            app.CheckBox.ValueChangedFcn = createCallbackFcn(app, @CheckBoxValueChanged, true);
+            app.CheckBox.Enable = 'off';
+            app.CheckBox.Text = '';
+            app.CheckBox.Position = [11 97 25 22];
+            app.CheckBox.Value = true;
+
+            % Create BrowseButton
+            app.BrowseButton = uibutton(app.RemovalofleadingandtrailingsecondsPanel, 'push');
+            app.BrowseButton.ButtonPushedFcn = createCallbackFcn(app, @BrowseButtonPushed, true);
+            app.BrowseButton.Enable = 'off';
+            app.BrowseButton.Position = [222 97 58 22];
+            app.BrowseButton.Text = 'Browse';
+
             % Create Copy2ArchiveTab
             app.Copy2ArchiveTab = uitab(app.TabGroup);
             app.Copy2ArchiveTab.Title = 'Copy 2 Archive';
@@ -1162,7 +1360,7 @@ removeQCprefix(app.path)
 
             % Create StationDropDown
             app.StationDropDown = uidropdown(app.SettingsPanel_2);
-            app.StationDropDown.Items = {'Select Station', 'ARK', 'ES1', 'FEB', 'FN1', 'FN3'};
+            app.StationDropDown.Items = {'Select Station', 'ARK', 'ES1', 'FEB', 'FN1', 'FN3', 'LTK'};
             app.StationDropDown.ValueChangedFcn = createCallbackFcn(app, @StationDropDownValueChanged, true);
             app.StationDropDown.Position = [114 107 140 22];
             app.StationDropDown.Value = 'Select Station';
@@ -1518,24 +1716,24 @@ removeQCprefix(app.path)
             app.UIAxes2.GridColor = [1 1 1];
             app.UIAxes2.Position = [10 130 307 175];
 
-            % Create BSoundHTab
-            app.BSoundHTab = uitab(app.TabGroup);
-            app.BSoundHTab.Title = 'BSoundH';
-            app.BSoundHTab.BackgroundColor = [0 0.2314 0.4118];
+            % Create BSoundHorPamguideTab
+            app.BSoundHorPamguideTab = uitab(app.TabGroup);
+            app.BSoundHorPamguideTab.Title = 'BSoundH or Pamguide';
+            app.BSoundHorPamguideTab.BackgroundColor = [0 0.2314 0.4118];
 
             % Create OpenBSoundHButton
-            app.OpenBSoundHButton = uibutton(app.BSoundHTab, 'push');
+            app.OpenBSoundHButton = uibutton(app.BSoundHorPamguideTab, 'push');
             app.OpenBSoundHButton.ButtonPushedFcn = createCallbackFcn(app, @OpenBSoundHButtonPushed, true);
             app.OpenBSoundHButton.Position = [13 561 100 22];
             app.OpenBSoundHButton.Text = 'Open BSoundH';
 
             % Create Image4
-            app.Image4 = uiimage(app.BSoundHTab);
+            app.Image4 = uiimage(app.BSoundHorPamguideTab);
             app.Image4.Position = [183 483 100 100];
             app.Image4.ImageSource = 'rolf.png';
 
             % Create TEXT_3
-            app.TEXT_3 = uilabel(app.BSoundHTab);
+            app.TEXT_3 = uilabel(app.BSoundHorPamguideTab);
             app.TEXT_3.HorizontalAlignment = 'center';
             app.TEXT_3.FontSize = 24;
             app.TEXT_3.FontWeight = 'bold';
@@ -1544,7 +1742,7 @@ removeQCprefix(app.path)
             app.TEXT_3.Text = 'Processing in BSoundH';
 
             % Create TEXT_4
-            app.TEXT_4 = uilabel(app.BSoundHTab);
+            app.TEXT_4 = uilabel(app.BSoundHorPamguideTab);
             app.TEXT_4.HorizontalAlignment = 'center';
             app.TEXT_4.FontSize = 14;
             app.TEXT_4.FontWeight = 'bold';
@@ -1553,47 +1751,47 @@ removeQCprefix(app.path)
             app.TEXT_4.Text = 'Remember the big 5';
 
             % Create TEXT_5
-            app.TEXT_5 = uilabel(app.BSoundHTab);
+            app.TEXT_5 = uilabel(app.BSoundHorPamguideTab);
             app.TEXT_5.FontWeight = 'bold';
             app.TEXT_5.FontColor = [1 1 1];
             app.TEXT_5.Position = [7 357 347 39];
             app.TEXT_5.Text = '1. Import one month of data by selecting the folder';
 
             % Create TEXT_6
-            app.TEXT_6 = uilabel(app.BSoundHTab);
+            app.TEXT_6 = uilabel(app.BSoundHorPamguideTab);
             app.TEXT_6.FontWeight = 'bold';
             app.TEXT_6.FontColor = [1 1 1];
             app.TEXT_6.Position = [7 330 300 34];
             app.TEXT_6.Text = '2. Set start date from file name and set files as fixed and alligned';
 
             % Create TEXT_7
-            app.TEXT_7 = uilabel(app.BSoundHTab);
+            app.TEXT_7 = uilabel(app.BSoundHorPamguideTab);
             app.TEXT_7.FontWeight = 'bold';
             app.TEXT_7.FontColor = [1 1 1];
             app.TEXT_7.Position = [7 295 347 39];
             app.TEXT_7.Text = '3. Set calibration factor';
 
             % Create TEXT_8
-            app.TEXT_8 = uilabel(app.BSoundHTab);
+            app.TEXT_8 = uilabel(app.BSoundHorPamguideTab);
             app.TEXT_8.FontWeight = 'bold';
             app.TEXT_8.FontColor = [1 1 1];
             app.TEXT_8.Position = [7 260 347 39];
             app.TEXT_8.Text = '4. Start Ambient Evaluation';
 
             % Create TEXT_9
-            app.TEXT_9 = uilabel(app.BSoundHTab);
+            app.TEXT_9 = uilabel(app.BSoundHorPamguideTab);
             app.TEXT_9.FontWeight = 'bold';
             app.TEXT_9.FontColor = [1 1 1];
             app.TEXT_9.Position = [7 222 347 39];
             app.TEXT_9.Text = '5. Export data (don''t forget to validate)';
 
-            % Create SpectralQCTab
-            app.SpectralQCTab = uitab(app.TabGroup);
-            app.SpectralQCTab.Title = 'SpectralQC';
-            app.SpectralQCTab.BackgroundColor = [0 0.2314 0.4118];
+            % Create h5ConverterSpectralQCTab
+            app.h5ConverterSpectralQCTab = uitab(app.TabGroup);
+            app.h5ConverterSpectralQCTab.Title = 'h5 Converter & SpectralQC';
+            app.h5ConverterSpectralQCTab.BackgroundColor = [0 0.2314 0.4118];
 
             % Create InputPanel
-            app.InputPanel = uipanel(app.SpectralQCTab);
+            app.InputPanel = uipanel(app.h5ConverterSpectralQCTab);
             app.InputPanel.ForegroundColor = [1 1 1];
             app.InputPanel.Title = 'Input';
             app.InputPanel.BackgroundColor = [0 0.3294 0.6];
@@ -1622,7 +1820,7 @@ removeQCprefix(app.path)
             app.h5formatDropDown.Value = 'BSH format';
 
             % Create SelectAnalysesPanel
-            app.SelectAnalysesPanel = uipanel(app.SpectralQCTab);
+            app.SelectAnalysesPanel = uipanel(app.h5ConverterSpectralQCTab);
             app.SelectAnalysesPanel.ForegroundColor = [1 1 1];
             app.SelectAnalysesPanel.Title = 'Select Analyses';
             app.SelectAnalysesPanel.BackgroundColor = [0 0.3294 0.6];
@@ -1695,7 +1893,7 @@ removeQCprefix(app.path)
             app.selectallCheckBox.Position = [213 117 69 22];
 
             % Create QualityChecksPanel
-            app.QualityChecksPanel = uipanel(app.SpectralQCTab);
+            app.QualityChecksPanel = uipanel(app.h5ConverterSpectralQCTab);
             app.QualityChecksPanel.ForegroundColor = [1 1 1];
             app.QualityChecksPanel.Title = 'Quality Checks';
             app.QualityChecksPanel.BackgroundColor = [0 0.3294 0.6];
@@ -1744,7 +1942,7 @@ removeQCprefix(app.path)
             app.selectallCheckBox_2.Position = [217 91 69 22];
 
             % Create ExportPanel
-            app.ExportPanel = uipanel(app.SpectralQCTab);
+            app.ExportPanel = uipanel(app.h5ConverterSpectralQCTab);
             app.ExportPanel.ForegroundColor = [1 1 1];
             app.ExportPanel.Title = 'Export';
             app.ExportPanel.BackgroundColor = [0 0.3294 0.6];
@@ -1778,7 +1976,7 @@ removeQCprefix(app.path)
             app.figCheckBox.Position = [110 8 35 22];
 
             % Create RUNButton_2
-            app.RUNButton_2 = uibutton(app.SpectralQCTab, 'push');
+            app.RUNButton_2 = uibutton(app.h5ConverterSpectralQCTab, 'push');
             app.RUNButton_2.BackgroundColor = [0 0.3294 0.6];
             app.RUNButton_2.FontSize = 30;
             app.RUNButton_2.FontWeight = 'bold';

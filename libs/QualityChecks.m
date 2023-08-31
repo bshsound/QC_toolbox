@@ -125,10 +125,10 @@ end
     Q_08 = Q08(meanv);
     
     %% QC_14: Check if everything is okay is performed after QC_10 and is 
-    Q_14 = Q14([Q_01;Q_02;Q_03;Q_04;Q_05;Q_06;Q_07;Q_08;Q_09;Q_10;Q_11;Q_12;Q_13]');
+    Q_14 = Q14([Q_01;Q_02;Q_03;Q_04;Q_05;Q_08;Q_10;Q_12;Q_13]');
  
 %% QC Matrix building    
-    QC = [Q_01;Q_02;Q_03;Q_04;Q_05;Q_08;Q_10;Q_12;Q_13;Q_14]';
+    QC = [Q_01;Q_02;Q_03;Q_04;Q_05;Q_06;Q_07;Q_08;Q_09;Q_10;Q_11;Q_12;Q_13;Q_14]';
 
 %% Create QC-log file .tex
 yy = num2str(year(depl));

@@ -17,7 +17,7 @@ for ii = 1:length(filelist)
     % that point e.g. 'XXX_220301110000.wav' - need to add leadsec to
     % filename in order to arrive at correct timestamps
     oldtime = datetime(filename(5:end-4),'InputFormat','yyMMddHHmmSS');
-    newtime = datestr([oldtime + seconds(leadsecs)],'yymmddHHMMSS');
+    newtime = datestr([oldtime + seconds(leadsecs)],'yymmddHHMMss');
     if leadsecs ~= 0
         newfilename = [filename(1:4) newtime '.wav'];
     else
