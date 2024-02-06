@@ -400,6 +400,11 @@ end
 %%
 try D.dataset_ambient_noise.measurement_data.leq_spectral_stats.L01 = h5read(filename,'/dataset_ambient_noise/measurement_data/leq_spectral_stats/L01');
     GUI.bsh_spectral_stats_L01 = D.dataset_ambient_noise.measurement_data.leq_spectral_stats.L01;
+    if ~isempty(GUI.bsh_spectral_stats_L01) & ~isempty(GUI.bsh_spectral_stats_L05) & ~isempty(GUI.bsh_spectral_stats_L50) & ~isempty(GUI.bsh_spectral_stats_L90) & ~isempty(GUI.bsh_spectral_stats_L99) & ~isempty(GUI.bsh_spectral_stats_LMax) & ~isempty(GUI.bsh_spectral_stats_LMean) & ~isempty(GUI.bsh_spectral_stats_LMin)
+        GUI.Lamp_leq_spectrotemporalstats.Color = 'g'
+    else
+        Lamp_leq_spectrotemporalstats.Color = 'r'
+    end
 catch
     R(24) = 0;
     R_EM{24,1}='.../leq_spectral_stats/L01';
@@ -418,6 +423,11 @@ end
 %%
 try D.dataset_ambient_noise.measurement_data.leq_spectral_stats.L05 = h5read(filename,'/dataset_ambient_noise/measurement_data/leq_spectral_stats/L05');
     GUI.bsh_spectral_stats_L05 = D.dataset_ambient_noise.measurement_data.leq_spectral_stats.L05;
+    if ~isempty(GUI.bsh_spectral_stats_L01) & ~isempty(GUI.bsh_spectral_stats_L05) & ~isempty(GUI.bsh_spectral_stats_L50) & ~isempty(GUI.bsh_spectral_stats_L90) & ~isempty(GUI.bsh_spectral_stats_L99) & ~isempty(GUI.bsh_spectral_stats_LMax) & ~isempty(GUI.bsh_spectral_stats_LMean) & ~isempty(GUI.bsh_spectral_stats_LMin)
+        GUI.Lamp_leq_spectrotemporalstats.Color = 'g'
+    else
+        Lamp_leq_spectrotemporalstats.Color = 'r'
+    end
 catch
     R(25) = 0;
     R_EM{25,1}='.../leq_spectral_stats/L05';
@@ -436,6 +446,11 @@ end
 %%
 try D.dataset_ambient_noise.measurement_data.leq_spectral_stats.L50 = h5read(filename,'/dataset_ambient_noise/measurement_data/leq_spectral_stats/L50');
     GUI.bsh_spectral_stats_L50 = D.dataset_ambient_noise.measurement_data.leq_spectral_stats.L50;
+    if ~isempty(GUI.bsh_spectral_stats_L01) & ~isempty(GUI.bsh_spectral_stats_L05) & ~isempty(GUI.bsh_spectral_stats_L50) & ~isempty(GUI.bsh_spectral_stats_L90) & ~isempty(GUI.bsh_spectral_stats_L99) & ~isempty(GUI.bsh_spectral_stats_LMax) & ~isempty(GUI.bsh_spectral_stats_LMean) & ~isempty(GUI.bsh_spectral_stats_LMin)
+        GUI.Lamp_leq_spectrotemporalstats.Color = 'g'
+    else
+        Lamp_leq_spectrotemporalstats.Color = 'r'
+    end
 catch
     R(26) = 0;
     R_EM{26,1}='.../leq_spectral_stats/L50';
@@ -454,6 +469,11 @@ end
 %%
 try D.dataset_ambient_noise.measurement_data.leq_spectral_stats.L90 = h5read(filename,'/dataset_ambient_noise/measurement_data/leq_spectral_stats/L90');
     GUI.bsh_spectral_stats_L90 = D.dataset_ambient_noise.measurement_data.leq_spectral_stats.L90;
+    if ~isempty(GUI.bsh_spectral_stats_L01) & ~isempty(GUI.bsh_spectral_stats_L05) & ~isempty(GUI.bsh_spectral_stats_L50) & ~isempty(GUI.bsh_spectral_stats_L90) & ~isempty(GUI.bsh_spectral_stats_L99) & ~isempty(GUI.bsh_spectral_stats_LMax) & ~isempty(GUI.bsh_spectral_stats_LMean) & ~isempty(GUI.bsh_spectral_stats_LMin)
+        GUI.Lamp_leq_spectrotemporalstats.Color = 'g'
+    else
+        Lamp_leq_spectrotemporalstats.Color = 'r'
+    end
 catch
     R(27) = 0;
     R_EM{27,1}='.../leq_spectral_stats/L90';
@@ -472,6 +492,11 @@ end
 %%
 try D.dataset_ambient_noise.measurement_data.leq_spectral_stats.L99 = h5read(filename,'/dataset_ambient_noise/measurement_data/leq_spectral_stats/L99');
     GUI.bsh_spectral_stats_L99 = D.dataset_ambient_noise.measurement_data.leq_spectral_stats.L99;
+    if ~isempty(GUI.bsh_spectral_stats_L01) & ~isempty(GUI.bsh_spectral_stats_L05) & ~isempty(GUI.bsh_spectral_stats_L50) & ~isempty(GUI.bsh_spectral_stats_L90) & ~isempty(GUI.bsh_spectral_stats_L99) & ~isempty(GUI.bsh_spectral_stats_LMax) & ~isempty(GUI.bsh_spectral_stats_LMean) & ~isempty(GUI.bsh_spectral_stats_LMin)
+        GUI.Lamp_leq_spectrotemporalstats.Color = 'g'
+    else
+        Lamp_leq_spectrotemporalstats.Color = 'r'
+    end
 catch
     R(28) = 0;
     R_EM{28,1}='.../leq_spectral_stats/L99';
@@ -490,6 +515,11 @@ end
 %%
 try D.dataset_ambient_noise.measurement_data.leq_spectral_stats.LMax = h5read(filename,'/dataset_ambient_noise/measurement_data/leq_spectral_stats/LMax');
     GUI.bsh_spectral_stats_LMax = D.dataset_ambient_noise.measurement_data.leq_spectral_stats.LMax;
+    if ~isempty(GUI.bsh_spectral_stats_L01) & ~isempty(GUI.bsh_spectral_stats_L05) & ~isempty(GUI.bsh_spectral_stats_L50) & ~isempty(GUI.bsh_spectral_stats_L90) & ~isempty(GUI.bsh_spectral_stats_L99) & ~isempty(GUI.bsh_spectral_stats_LMax) & ~isempty(GUI.bsh_spectral_stats_LMean) & ~isempty(GUI.bsh_spectral_stats_LMin)
+        GUI.Lamp_leq_spectrotemporalstats.Color = 'g'
+    else
+        Lamp_leq_spectrotemporalstats.Color = 'r'
+    end
 catch
     R(29) = 0;
     R_EM{29,1}='.../leq_spectral_stats/LMax';
@@ -508,6 +538,11 @@ end
 %%
 try D.dataset_ambient_noise.measurement_data.leq_spectral_stats.LMean = h5read(filename,'/dataset_ambient_noise/measurement_data/leq_spectral_stats/LMean');
     GUI.bsh_spectral_stats_LMean = D.dataset_ambient_noise.measurement_data.leq_spectral_stats.LMean;
+    if ~isempty(GUI.bsh_spectral_stats_L01) & ~isempty(GUI.bsh_spectral_stats_L05) & ~isempty(GUI.bsh_spectral_stats_L50) & ~isempty(GUI.bsh_spectral_stats_L90) & ~isempty(GUI.bsh_spectral_stats_L99) & ~isempty(GUI.bsh_spectral_stats_LMax) & ~isempty(GUI.bsh_spectral_stats_LMean) & ~isempty(GUI.bsh_spectral_stats_LMin)
+        GUI.Lamp_leq_spectrotemporalstats.Color = 'g'
+    else
+        Lamp_leq_spectrotemporalstats.Color = 'r'
+    end
 catch
     R(30) = 0;
     R_EM{30,1}='.../leq_spectral_stats/LMean';
@@ -526,6 +561,11 @@ end
 %%
 try D.dataset_ambient_noise.measurement_data.leq_spectral_stats.LMin = h5read(filename,'/dataset_ambient_noise/measurement_data/leq_spectral_stats/LMin');
     GUI.bsh_spectral_stats_LMin = D.dataset_ambient_noise.measurement_data.leq_spectral_stats.LMin;
+    if ~isempty(GUI.bsh_spectral_stats_L01) & ~isempty(GUI.bsh_spectral_stats_L05) & ~isempty(GUI.bsh_spectral_stats_L50) & ~isempty(GUI.bsh_spectral_stats_L90) & ~isempty(GUI.bsh_spectral_stats_L99) & ~isempty(GUI.bsh_spectral_stats_LMax) & ~isempty(GUI.bsh_spectral_stats_LMean) & ~isempty(GUI.bsh_spectral_stats_LMin)
+        GUI.Lamp_leq_spectrotemporalstats.Color = 'g'
+    else
+        Lamp_leq_spectrotemporalstats.Color = 'r'
+    end
 catch
     R(31) = 0;
     R_EM{31,1}='.../leq_spectral_stats/LMin';
@@ -560,6 +600,11 @@ end
 %%
 try D.dataset_ambient_noise.measurement_data.leq_temporal_stats.L01 = h5read(filename,'/dataset_ambient_noise/measurement_data/leq_temporal_stats/L01');
     GUI.bsh_temporal_stats_L01 = D.dataset_ambient_noise.measurement_data.leq_temporal_stats.L01;
+    if ~isempty(GUI.bsh_temporal_stats_L01) & ~isempty(GUI.bsh_temporal_stats_L05) & ~isempty(GUI.bsh_temporal_stats_L50) & ~isempty(GUI.bsh_temporal_stats_L90) & ~isempty(GUI.bsh_temporal_stats_L99) & ~isempty(GUI.bsh_temporal_stats_LMax) & ~isempty(GUI.bsh_temporal_stats_LMean) & ~isempty(GUI.bsh_temporal_stats_LMin)
+        GUI.Lamp_leq_temporalstats.Color = 'g'
+    else
+        Lamp_leq_spectrotemporalstats.Color = 'r'
+    end
 catch
     R(33) = 0;
     R_EM{33,1}='.../leq_temporal_stats/L01';
@@ -578,6 +623,11 @@ end
 %%
 try D.dataset_ambient_noise.measurement_data.leq_temporal_stats.L05 = h5read(filename,'/dataset_ambient_noise/measurement_data/leq_temporal_stats/L05');
     GUI.bsh_temporal_stats_L05 = D.dataset_ambient_noise.measurement_data.leq_temporal_stats.L05;
+    if ~isempty(GUI.bsh_temporal_stats_L01) & ~isempty(GUI.bsh_temporal_stats_L05) & ~isempty(GUI.bsh_temporal_stats_L50) & ~isempty(GUI.bsh_temporal_stats_L90) & ~isempty(GUI.bsh_temporal_stats_L99) & ~isempty(GUI.bsh_temporal_stats_LMax) & ~isempty(GUI.bsh_temporal_stats_LMean) & ~isempty(GUI.bsh_temporal_stats_LMin)
+        GUI.Lamp_leq_temporalstats.Color = 'g'
+    else
+        Lamp_leq_spectrotemporalstats.Color = 'r'
+    end
 catch
     R(34) = 0;
     R_EM{34,1}='.../leq_temporal_stats/L05';
@@ -596,6 +646,11 @@ end
 %%
 try D.dataset_ambient_noise.measurement_data.leq_temporal_stats.L50 = h5read(filename,'/dataset_ambient_noise/measurement_data/leq_temporal_stats/L50');
     GUI.bsh_temporal_stats_L50 = D.dataset_ambient_noise.measurement_data.leq_temporal_stats.L50;
+    if ~isempty(GUI.bsh_temporal_stats_L01) & ~isempty(GUI.bsh_temporal_stats_L05) & ~isempty(GUI.bsh_temporal_stats_L50) & ~isempty(GUI.bsh_temporal_stats_L90) & ~isempty(GUI.bsh_temporal_stats_L99) & ~isempty(GUI.bsh_temporal_stats_LMax) & ~isempty(GUI.bsh_temporal_stats_LMean) & ~isempty(GUI.bsh_temporal_stats_LMin)
+        GUI.Lamp_leq_temporalstats.Color = 'g'
+    else
+        Lamp_leq_spectrotemporalstats.Color = 'r'
+    end
 catch
     R(35) = 0;
     R_EM{35,1}='.../leq_temporal_stats/L50';
@@ -614,6 +669,11 @@ end
 %%
 try D.dataset_ambient_noise.measurement_data.leq_temporal_stats.L90 = h5read(filename,'/dataset_ambient_noise/measurement_data/leq_temporal_stats/L90');
     GUI.bsh_temporal_stats_L90 = D.dataset_ambient_noise.measurement_data.leq_temporal_stats.L90;
+    if ~isempty(GUI.bsh_temporal_stats_L01) & ~isempty(GUI.bsh_temporal_stats_L05) & ~isempty(GUI.bsh_temporal_stats_L50) & ~isempty(GUI.bsh_temporal_stats_L90) & ~isempty(GUI.bsh_temporal_stats_L99) & ~isempty(GUI.bsh_temporal_stats_LMax) & ~isempty(GUI.bsh_temporal_stats_LMean) & ~isempty(GUI.bsh_temporal_stats_LMin)
+        GUI.Lamp_leq_temporalstats.Color = 'g'
+    else
+        Lamp_leq_spectrotemporalstats.Color = 'r'
+    end
 catch
     R(36) = 0;
     R_EM{36,1}='.../leq_temporal_stats/L90';
@@ -632,6 +692,11 @@ end
 %%
 try D.dataset_ambient_noise.measurement_data.leq_temporal_stats.L99 = h5read(filename,'/dataset_ambient_noise/measurement_data/leq_temporal_stats/L99');
     GUI.bsh_temporal_stats_L99 = D.dataset_ambient_noise.measurement_data.leq_temporal_stats.L99;
+    if ~isempty(GUI.bsh_temporal_stats_L01) & ~isempty(GUI.bsh_temporal_stats_L05) & ~isempty(GUI.bsh_temporal_stats_L50) & ~isempty(GUI.bsh_temporal_stats_L90) & ~isempty(GUI.bsh_temporal_stats_L99) & ~isempty(GUI.bsh_temporal_stats_LMax) & ~isempty(GUI.bsh_temporal_stats_LMean) & ~isempty(GUI.bsh_temporal_stats_LMin)
+        GUI.Lamp_leq_temporalstats.Color = 'g'
+    else
+        Lamp_leq_spectrotemporalstats.Color = 'r'
+    end
 catch
     R(37) = 0;
     R_EM{37,1}='.../leq_temporal_stats/L99';
@@ -650,6 +715,11 @@ end
 %%
 try D.dataset_ambient_noise.measurement_data.leq_temporal_stats.LMax = h5read(filename,'/dataset_ambient_noise/measurement_data/leq_temporal_stats/LMax');
     GUI.bsh_temporal_stats_LMax = D.dataset_ambient_noise.measurement_data.leq_temporal_stats.LMax;
+    if ~isempty(GUI.bsh_temporal_stats_L01) & ~isempty(GUI.bsh_temporal_stats_L05) & ~isempty(GUI.bsh_temporal_stats_L50) & ~isempty(GUI.bsh_temporal_stats_L90) & ~isempty(GUI.bsh_temporal_stats_L99) & ~isempty(GUI.bsh_temporal_stats_LMax) & ~isempty(GUI.bsh_temporal_stats_LMean) & ~isempty(GUI.bsh_temporal_stats_LMin)
+        GUI.Lamp_leq_temporalstats.Color = 'g'
+    else
+        Lamp_leq_spectrotemporalstats.Color = 'r'
+    end
 catch
     R(38) = 0;
     R_EM{38,1}='.../leq_temporal_stats/LMax';
@@ -668,6 +738,11 @@ end
 %%
 try D.dataset_ambient_noise.measurement_data.leq_temporal_stats.LMean = h5read(filename,'/dataset_ambient_noise/measurement_data/leq_temporal_stats/LMean');
     GUI.bsh_temporal_stats_LMean = D.dataset_ambient_noise.measurement_data.leq_temporal_stats.LMean;
+    if ~isempty(GUI.bsh_temporal_stats_L01) & ~isempty(GUI.bsh_temporal_stats_L05) & ~isempty(GUI.bsh_temporal_stats_L50) & ~isempty(GUI.bsh_temporal_stats_L90) & ~isempty(GUI.bsh_temporal_stats_L99) & ~isempty(GUI.bsh_temporal_stats_LMax) & ~isempty(GUI.bsh_temporal_stats_LMean) & ~isempty(GUI.bsh_temporal_stats_LMin)
+        GUI.Lamp_leq_temporalstats.Color = 'g'
+    else
+        Lamp_leq_spectrotemporalstats.Color = 'r'
+    end
 catch
     R(39) = 0;
     R_EM{39,1}='.../leq_temporal_stats/LMean';
@@ -686,6 +761,11 @@ end
 %%
 try D.dataset_ambient_noise.measurement_data.leq_temporal_stats.LMin = h5read(filename,'/dataset_ambient_noise/measurement_data/leq_temporal_stats/LMin');
     GUI.bsh_temporal_stats_LMin = D.dataset_ambient_noise.measurement_data.leq_temporal_stats.LMin;
+    if ~isempty(GUI.bsh_temporal_stats_L01) & ~isempty(GUI.bsh_temporal_stats_L05) & ~isempty(GUI.bsh_temporal_stats_L50) & ~isempty(GUI.bsh_temporal_stats_L90) & ~isempty(GUI.bsh_temporal_stats_L99) & ~isempty(GUI.bsh_temporal_stats_LMax) & ~isempty(GUI.bsh_temporal_stats_LMean) & ~isempty(GUI.bsh_temporal_stats_LMin)
+        GUI.Lamp_leq_temporalstats.Color = 'g'
+    else
+        Lamp_leq_spectrotemporalstats.Color = 'r'
+    end
 catch
     R(40) = 0;
     R_EM{40,1}='.../leq_temporal_stats/LMin';
