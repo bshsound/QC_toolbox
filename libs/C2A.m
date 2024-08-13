@@ -15,6 +15,7 @@ function [TL] = C2A(sea,station,hydno,source,target,yy,mm,dd)
 tic
 %% write .ps1 script in Matlab
 source(source=='\')='/';
+target = 'Y:\Meereskunde\UWS\Dauer'
 target(target=='\')='/';
 fileID = fopen('temp.ps1','w');
 fprintf(fileID,['$Meer = "',sea, '/" \n']);

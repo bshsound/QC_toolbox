@@ -4,7 +4,12 @@ function [QC,duration,meanv,sr,stdrms,ts,ftime] = QualityChecks(station,path_in,
 addpath('X:\Meereskunde\Unterwasserschall\HDF5_Testdaten_Skripte\Skripte\Matlabskripte\QC_toolbox\libs\')
 tic
 %% Scan for all .wav files in path_in_in
-flist = dir([path_in '*.wav']);
+% flist = dir([path_in '*.wav']);
+% update 22.03.24 - now files do not need to be in one directory, but can
+% instead also be organized in subdirectories as from Sylence recorders
+rootdir = path_in;
+flist = dir(fullfile(rootdir, '**\*.wav'));  %get list of files and folders in any subfolder
+flist = flist(~[flist.isdir]);  %remove folders from list
 
 %% initialize variables
 Q_01(1:length(flist)) = NaN; % cannot read file

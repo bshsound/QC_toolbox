@@ -6,9 +6,10 @@ R = ones(1,53);
 R_EM{53,2}={};
 %%
 try D.author = h5read(filename,'/author');
-    GUI.bsh_author = D.author;
+    GUI.bsh_author = char(D.author);
+    GUI.bsh_author(end) = [];
     GUI.Lamp_author.Color = 'g';
-    GUI.authorEditField.Value = D.author;
+    GUI.authorEditField.Value = GUI.bsh_author;
 catch
     R(1) = 0;
     R_EM{1,1}='/author';
@@ -57,9 +58,10 @@ catch
 end
 %%
 try D.dataset_ambient_noise.calibration.calibration_factor_unit = h5read(filename,'/dataset_ambient_noise/calibration/calibration_factor_unit');
-    GUI.bsh_calibration_factor_unit = D.dataset_ambient_noise.calibration.calibration_factor_unit;
+    GUI.bsh_calibration_factor_unit = char(D.dataset_ambient_noise.calibration.calibration_factor_unit);
+    GUI.bsh_calibration_factor_unit(end) = [];
     GUI.Lamp_calibration_factor_unit.Color = 'g';
-    GUI.calibraionfactorunitEditField.Value = D.dataset_ambient_noise.calibration.calibration_factor_unit;
+    GUI.calibraionfactorunitEditField.Value = GUI.bsh_calibration_factor_unit;
 catch
     R(4) = 0;
     R_EM{4,1}='.../calibration_factor_unit';
@@ -91,9 +93,10 @@ catch
 end
 %%
 try D.dataset_ambient_noise.calibration.calibration_procedure = h5read(filename,'/dataset_ambient_noise/calibration/calibration_procedure');
-    GUI.bsh_calibration_procedure = D.dataset_ambient_noise.calibration.calibration_procedure;
+    GUI.bsh_calibration_procedure = char(D.dataset_ambient_noise.calibration.calibration_procedure);
+    GUI.bsh_calibration_procedure(end) = [];
     GUI.Lamp_calibration_procedure.Color = 'g';
-    GUI.calibrationprocedureEditField.Value = D.dataset_ambient_noise.calibration.calibration_procedure;
+    GUI.calibrationprocedureEditField.Value = GUI.bsh_calibration_procedure;
 catch
     R(6) = 0;
     R_EM{6,1}='.../calibration_procedure';
@@ -108,11 +111,12 @@ catch
 end
 %%
 try D.dataset_ambient_noise.calibration.reference_frequency = h5read(filename,'/dataset_ambient_noise/calibration/reference_frequencies_levels');
-    GUI.bsh_reference_frequencies_levels = D.dataset_ambient_noise.calibration.reference_frequency;
+    GUI.bsh_reference_frequencies_levels = char(D.dataset_ambient_noise.calibration.reference_frequency);
+    GUI.bsh_reference_frequencies_levels(end) = [];
     GUI.Lamp_reference_frequencies_levels.Color = 'g';
-    A = split(D.dataset_ambient_noise.calibration.reference_frequency,' ');
-    GUI.referencefrequencieslevelsEditField.Value = A(1);
-    GUI.referencefrequencieslevelsEditField2.Value = double(A(2));
+    A = split(GUI.bsh_reference_frequencies_levels,' ');
+    GUI.referencefrequencieslevelsEditField.Value = string(A(1));
+    GUI.referencefrequencieslevelsEditField2.Value = double(string(A(3)));
 catch
     R(7) = 0;
     R_EM{7,1}='.../reference_frequency';
@@ -127,9 +131,10 @@ catch
 end
 %%
 try D.dataset_ambient_noise.comments = h5read(filename,'/dataset_ambient_noise/comments');
-    GUI.bsh_comments = D.dataset_ambient_noise.comments;
+    GUI.bsh_comments = char(D.dataset_ambient_noise.comments);
+    GUI.bsh_comments(end) = [];
     GUI.Lamp_comments.Color = 'g';
-    GUI.commentsEditField.Value = D.dataset_ambient_noise.comments;
+    GUI.commentsEditField.Value = GUI.bsh_comments;
 catch
     R(8) = 0;
     R_EM{8,1}='.../comments';
@@ -162,9 +167,10 @@ catch
 end
 %%
 try D.dataset_ambient_noise.coordinates_reference = h5read(filename,'/dataset_ambient_noise/coordinates_reference');
-    GUI.bsh_coordinatesreference = D.dataset_ambient_noise.coordinates_reference;
+    GUI.bsh_coordinatesreference = char(D.dataset_ambient_noise.coordinates_reference);
+    GUI.bsh_coordinatesreference(end) = [];
     GUI.Lamp_coordinates_reference.Color = 'g';
-    GUI.coordinatesreferenceEditField.Value = D.dataset_ambient_noise.coordinates_reference;
+    GUI.coordinatesreferenceEditField.Value = GUI.bsh_coordinatesreference;
 catch
     R(10) = 0;
     R_EM{10,1}='.../coordinates_reference';
@@ -179,9 +185,10 @@ catch
 end
 %%
 try D.dataset_ambient_noise.dataset_type = h5read(filename,'/dataset_ambient_noise/dataset_type');
-    GUI.bsh_datasettype = D.dataset_ambient_noise.dataset_type;
+    GUI.bsh_datasettype = char(D.dataset_ambient_noise.dataset_type);
+    GUI.bsh_datasettype(end) = [];
     GUI.Lamp_dataset_type.Color = 'g';
-    GUI.datasettypeEditField.Value = D.dataset_ambient_noise.dataset_type;
+    GUI.datasettypeEditField.Value = GUI.bsh_datasettype;
 catch
     R(11) = 0;
     R_EM{11,1}='.../dataset_type';
@@ -196,9 +203,10 @@ catch
 end
 %%
 try D.dataset_ambient_noise.dataset_version = h5read(filename,'/dataset_ambient_noise/dataset_version');
-    GUI.bsh_datasetversion = D.dataset_ambient_noise.dataset_version;
+    GUI.bsh_datasetversion = char(D.dataset_ambient_noise.dataset_version);
+    GUI.bsh_datasetversion(end) = [];
     GUI.Lamp_dataset_version.Color = 'g';
-    GUI.datasetversionEditField.Value = D.dataset_ambient_noise.dataset_version;
+    GUI.datasetversionEditField.Value = GUI.bsh_datasetversion;
 catch
     R(12) = 0;
     R_EM{12,1}='.../dataset_version';
@@ -230,9 +238,10 @@ catch
 end
 %%
 try D.dataset_ambient_noise.hydrophone.hydrophone_serial_number = h5read(filename,'/dataset_ambient_noise/hydrophone/hydrophone_serial_number');
-    GUI.bsh_hydrophone_serial_number = D.dataset_ambient_noise.hydrophone.hydrophone_serial_number;
+    GUI.bsh_hydrophone_serial_number = char(D.dataset_ambient_noise.hydrophone.hydrophone_serial_number);
+    GUI.bsh_hydrophone_serial_number(end) = [];
     GUI.Lamp_hydrophone_serial_number.Color = 'g';
-    GUI.hydrophoneserialnumberEditField.Value = D.dataset_ambient_noise.hydrophone.hydrophone_serial_number;
+    GUI.hydrophoneserialnumberEditField.Value = GUI.bsh_hydrophone_serial_number;
 catch
     R(14) = 0;
     R_EM{14,1}='.../hydrophone_serial_number';
@@ -247,9 +256,10 @@ catch
 end
 %%
 try D.dataset_ambient_noise.hydrophone.hydrophone_type = h5read(filename,'/dataset_ambient_noise/hydrophone/hydrophone_type');
-    GUI.bsh_hydrophone_type = D.dataset_ambient_noise.hydrophone.hydrophone_type;
+    GUI.bsh_hydrophone_type = char(D.dataset_ambient_noise.hydrophone.hydrophone_type);
+    GUI.bsh_hydrophone_type(end) = [];
     GUI.Lamp_hydrophone_type.Color = 'g';
-    GUI.hydrophonetypeEditField.Value = D.dataset_ambient_noise.hydrophone.hydrophone_type;
+    GUI.hydrophonetypeEditField.Value = GUI.bsh_hydrophone_type;
 catch
     R(15) = 0;
     R_EM{15,1}='.../hydrophone_type';
@@ -264,9 +274,10 @@ catch
 end
 %%
 try D.dataset_ambient_noise.hydrophone.hydrophone_manufacturer = h5read(filename,'/dataset_ambient_noise/hydrophone/hydrophone_manufacturer');
-    GUI.bsh_hydrophone_manufacturer = D.dataset_ambient_noise.hydrophone.hydrophone_manufacturer;
+    GUI.bsh_hydrophone_manufacturer = char(D.dataset_ambient_noise.hydrophone.hydrophone_manufacturer);
+    GUI.bsh_hydrophone_manufacturer(end) = [];
     GUI.Lamp_hydrophone_manufacturer.Color = 'g';
-    GUI.hydrophonemanufacturerEditField.Value = D.dataset_ambient_noise.hydrophone.hydrophone_manufacturer;
+    GUI.hydrophonemanufacturerEditField.Value = GUI.bsh_hydrophone_manufacturer;
 catch
     R(16) = 0;
     R_EM{16,1}='.../hydrophone_manufacturer';
@@ -281,9 +292,10 @@ catch
 end
 %%
 try D.dataset_ambient_noise.hydrophone.hydrophone_sensitivity_unit = h5read(filename,'/dataset_ambient_noise/hydrophone/hydrophone_sensitivity_unit');
-    GUI.bsh_hydrophone_sensitivity_unit = D.dataset_ambient_noise.hydrophone.hydrophone_sensitivity_unit;
+    GUI.bsh_hydrophone_sensitivity_unit = char(D.dataset_ambient_noise.hydrophone.hydrophone_sensitivity_unit);
+    GUI.bsh_hydrophone_sensitivity_unit(end) = [];
     GUI.Lamp_hydrophone_sensitivity_unit.Color = 'g';
-    GUI.hydrophonesensitivityunitEditField.Value = D.dataset_ambient_noise.hydrophone.hydrophone_sensitivity_unit;
+    GUI.hydrophonesensitivityunitEditField.Value = GUI.bsh_hydrophone_sensitivity_unit;
 catch
     R(17) = 0;
     R_EM{17,1}='.../hydrophone_sensitivity_unit';
@@ -300,7 +312,9 @@ end
 try D.dataset_ambient_noise.measurement_data.duty_cycle = h5read(filename,'/dataset_ambient_noise/measurement_data/duty_cycle');
     GUI.bsh_duty_cycle = D.dataset_ambient_noise.measurement_data.duty_cycle;
     GUI.Lamp_duty_cycle.Color = 'g';
-    A = regexprep(num2str(D.dataset_ambient_noise.measurement_data.duty_cycle),'\s+',',');
+    allOneString = sprintf('%.0f,' , GUI.bsh_duty_cycle);
+    allOneString(end) = [];% strip final comma
+    A = ['[' allOneString ']'];
     GUI.dutycycleEditField.Value = A;
 catch
     R(18) = 0;
@@ -799,9 +813,10 @@ catch
 end 
 %%
 try D.dataset_ambient_noise.measurement_purpose = h5read(filename,'/dataset_ambient_noise/measurement_purpose');
-    GUI.bsh_measurement_purpose = D.dataset_ambient_noise.measurement_purpose;
+    GUI.bsh_measurement_purpose = char(D.dataset_ambient_noise.measurement_purpose);
+    GUI.bsh_measurement_purpose(end) = [];
     GUI.Lamp_measurement_purpose.Color = 'g';
-    GUI.measurementpurposeDropDown.Value = D.dataset_ambient_noise.measurement_purpose;
+    GUI.measurementpurposeDropDown.Value = GUI.bsh_measurement_purpose;
 catch
     R(42) = 0;
     R_EM{42,1}='.../measurement_purpose';
@@ -833,9 +848,10 @@ catch
 end 
 %%
 try D.dataset_ambient_noise.measurement_setup.measurement_setup = h5read(filename,'/dataset_ambient_noise/measurement_setup/measurement_setup');
-    GUI.bsh_measurement_setup = D.dataset_ambient_noise.measurement_setup.measurement_setup;
+    GUI.bsh_measurement_setup = char(D.dataset_ambient_noise.measurement_setup.measurement_setup);
+    GUI.bsh_measurement_setup(end) = [];
     GUI.Lamp_measurement_setup.Color = 'g';
-    GUI.measurementsetupDropDown.Value = D.dataset_ambient_noise.measurement_setup.measurement_setup;
+    GUI.measurementsetupDropDown.Value = GUI.bsh_measurement_setup;
 catch
     R(44) = 0;
     R_EM{44,1}='.../measurement_setup';
@@ -850,9 +866,10 @@ catch
 end 
 %%
 try D.dataset_ambient_noise.name_measurement_position = h5read(filename,'/dataset_ambient_noise/name_measurement_position');
-    GUI.bsh_name_measurement_position = D.dataset_ambient_noise.name_measurement_position;
+    GUI.bsh_name_measurement_position = char(D.dataset_ambient_noise.name_measurement_position);
+    GUI.bsh_name_measurement_position(end) = [];
     GUI.Lamp_name_measurement_position.Color = 'g';
-    GUI.namemeasurementpositionEditField.Value = D.dataset_ambient_noise.name_measurement_position;
+    GUI.namemeasurementpositionEditField.Value = GUI.bsh_name_measurement_position;
 catch
    R(45) = 0;
     R_EM{45,1}='.../name_measurement_position';
@@ -867,9 +884,10 @@ catch
 end  
 %%
 try D.dataset_ambient_noise.recorder.recorder_manufacturer = h5read(filename,'/dataset_ambient_noise/recorder/recorder_manufacturer');
-    GUI.bsh_recorder_manufacturer = D.dataset_ambient_noise.recorder.recorder_manufacturer;
+    GUI.bsh_recorder_manufacturer = char(D.dataset_ambient_noise.recorder.recorder_manufacturer);
+    GUI.bsh_recorder_manufacturer(end) = [];
     GUI.Lamp_recorder_manufacturer.Color = 'g';
-    GUI.recordermanufacturerEditField.Value = D.dataset_ambient_noise.recorder.recorder_manufacturer;
+    GUI.recordermanufacturerEditField.Value = GUI.bsh_recorder_manufacturer;
 catch
     R(46) = 0;
     R_EM{46,1}='.../recorder_manufacturer';
@@ -884,9 +902,10 @@ catch
 end  
 %%
 try D.dataset_ambient_noise.recorder.recorder_serial_number = h5read(filename,'/dataset_ambient_noise/recorder/recorder_serial_number');
-    GUI.bsh_recorder_serialnumber = D.dataset_ambient_noise.recorder.recorder_serial_number;
+    GUI.bsh_recorder_serialnumber = char(D.dataset_ambient_noise.recorder.recorder_serial_number);
+    GUI.bsh_recorder_serialnumber(end) = [];
     GUI.Lamp_recorder_serial_number.Color = 'g';
-    GUI.recorderserialnumberEditField.Value = D.dataset_ambient_noise.recorder.recorder_serial_number;
+    GUI.recorderserialnumberEditField.Value = GUI.bsh_recorder_serialnumber;
 catch
   R(47) = 0;
     R_EM{47,1}='.../recorder_serial_number';
@@ -901,9 +920,10 @@ catch
 end  
 %%
 try D.dataset_ambient_noise.recorder.recorder_type = h5read(filename,'/dataset_ambient_noise/recorder/recorder_type');
-    GUI.bsh_recorder_type = D.dataset_ambient_noise.recorder.recorder_type;
+    GUI.bsh_recorder_type = char(D.dataset_ambient_noise.recorder.recorder_type);
+    GUI.bsh_recorder_type(end) = [];
     GUI.Lamp_recorder_type.Color = 'g';
-    GUI.recordertypeEditField.Value = D.dataset_ambient_noise.recorder.recorder_type;
+    GUI.recordertypeEditField.Value = GUI.bsh_recorder_type;
 catch
     R(48) = 0;
     R_EM{48,1}='.../recorder_type';
@@ -935,9 +955,10 @@ catch
 end  
 %%
 try D.measurement_institution = h5read(filename,'/measuring_institution');
-    GUI.bsh_measuring_institution = D.measurement_institution;
+    GUI.bsh_measuring_institution = char(D.measurement_institution);
+    GUI.bsh_measuring_institution(end) = [];
     GUI.Lamp_measuring_institution.Color = 'g';
-    GUI.measuringinstitutionEditField.Value = D.measurement_institution;
+    GUI.measuringinstitutionEditField.Value = GUI.bsh_measuring_institution;
 catch
     R(50) = 0;
     R_EM{50,1}='/measuring_institution';
@@ -952,9 +973,10 @@ catch
 end  
 %%
 try D.point_of_contact = h5read(filename,'/point_of_contact');
-    GUI.bsh_point_of_contact = D.point_of_contact;
+    GUI.bsh_point_of_contact = char(D.point_of_contact);
+    GUI.bsh_point_of_contact(end) = [];
     GUI.Lamp_point_of_contact.Color = 'g';
-    GUI.pointofcontactEditField.Value = D.point_of_contact;
+    GUI.pointofcontactEditField.Value = GUI.bsh_point_of_contact;
 catch
     R(51) = 0;
     R_EM{51,1}='/point_of_contact';
@@ -986,9 +1008,10 @@ catch
 end  
 %%
 try D.rawdata_uuid = h5read(filename,'/rawdata_uuid');
-    GUI.bsh_rawdata_uuid = D.rawdata_uuid;
+    GUI.bsh_rawdata_uuid = char(D.rawdata_uuid);
+    GUI.bsh_rawdata_uuid(end) = [];
     GUI.Lamp_rawdata_uuid.Color = 'g';
-    GUI.rawdatauuidEditField.Value = D.rawdata_uuid;
+    GUI.rawdatauuidEditField.Value = GUI.bsh_rawdata_uuid;
 catch
     R(53) = 0;
     R_EM{53,1}='/rawdata_uuid';

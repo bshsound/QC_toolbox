@@ -181,7 +181,12 @@ newcell={...
     };
     R2L_Append2TexOutput(texfile,newcell);  
 
-for ii = 1:length(flist)
+UX = length(flist);
+if UX > 1000
+    UX = 1000;
+end
+    
+for ii = 1:UX
     for jj = 1:14
         if QC(ii,jj)==0
             a(jj) = '-';
