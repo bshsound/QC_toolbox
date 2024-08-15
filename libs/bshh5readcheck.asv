@@ -964,9 +964,7 @@ end
 try D.dataset_ambient_noise.recorder.recorder_serial_number = h5read(filename,'/dataset_ambient_noise/recorder/recorder_serial_number');
     GUI.bsh_recorder_serialnumber = char(D.dataset_ambient_noise.recorder.recorder_serial_number);
     GUI.bsh_recorder_serialnumber(end) = [];
-    if ~isempty(GUI.bsh_recorder_serialnumber)
-        GUI.Lamp_recorder_serial_number.Color = 'g';
-    end
+    GUI.Lamp_recorder_serial_number.Color = 'g';
     GUI.recorderserialnumberEditField.Value = GUI.bsh_recorder_serialnumber;
 catch
   R(47) = 0;
@@ -984,9 +982,7 @@ end
 try D.dataset_ambient_noise.recorder.recorder_type = h5read(filename,'/dataset_ambient_noise/recorder/recorder_type');
     GUI.bsh_recorder_type = char(D.dataset_ambient_noise.recorder.recorder_type);
     GUI.bsh_recorder_type(end) = [];
-    if ~isempty(GUI.bsh_recorder_type)
-        GUI.Lamp_recorder_type.Color = 'g';
-    end
+    GUI.Lamp_recorder_type.Color = 'g';
     GUI.recordertypeEditField.Value = GUI.bsh_recorder_type;
 catch
     R(48) = 0;
@@ -1003,9 +999,7 @@ end
 %%
 try D.date_of_creation = h5read(filename,'/date_of_creation');
     GUI.bsh_date_of_creation = D.date_of_creation;
-    if ~isempty(GUI.bsh_date_of_creation)
-        GUI.Lamp_date_of_creation.Color = 'g';
-    end
+    GUI.Lamp_date_of_creation.Color = 'g';
     GUI.dateofcreationDatePicker.Value = datetime(D.date_of_creation,'ConvertFrom','posixtime');
 catch
     R(49) = 0;
@@ -1023,9 +1017,7 @@ end
 try D.measurement_institution = h5read(filename,'/measuring_institution');
     GUI.bsh_measuring_institution = char(D.measurement_institution);
     GUI.bsh_measuring_institution(end) = [];
-    if ~isempty(GUI.bsh_measuring_institution)
-        GUI.Lamp_measuring_institution.Color = 'g';
-    end
+    GUI.Lamp_measuring_institution.Color = 'g';
     GUI.measuringinstitutionEditField.Value = GUI.bsh_measuring_institution;
 catch
     R(50) = 0;
@@ -1043,9 +1035,7 @@ end
 try D.point_of_contact = h5read(filename,'/point_of_contact');
     GUI.bsh_point_of_contact = char(D.point_of_contact);
     GUI.bsh_point_of_contact(end) = [];
-    if ~isempty(GUI.bsh_point_of_contact)
-        GUI.Lamp_point_of_contact.Color = 'g';
-    end
+    GUI.Lamp_point_of_contact.Color = 'g';
     GUI.pointofcontactEditField.Value = GUI.bsh_point_of_contact;
 catch
     R(51) = 0;
@@ -1062,9 +1052,7 @@ end
 %%
 try D.rawdata_samplingrate = h5read(filename,'/rawdata_samplingrate');
     GUI.bsh_rawdata_samplingrate = D.rawdata_samplingrate;
-    if ~isempty(GUI.bsh_rawdata_samplingrate)
-        GUI.Lamp_rawdata_samplingrate.Color = 'g';
-    end
+    GUI.Lamp_rawdata_samplingrate.Color = 'g';
     GUI.rawdatasamplingrateEditField.Value = double(D.rawdata_samplingrate);
 catch
     R(52) = 0;
@@ -1082,9 +1070,7 @@ end
 try D.rawdata_uuid = h5read(filename,'/rawdata_uuid');
     GUI.bsh_rawdata_uuid = char(D.rawdata_uuid);
     GUI.bsh_rawdata_uuid(end) = [];
-    if ~isempty(GUI.bsh_rawdata_uuid)
-        GUI.Lamp_rawdata_uuid.Color = 'g';
-    end
+    GUI.Lamp_rawdata_uuid.Color = 'g';
     GUI.rawdatauuidEditField.Value = GUI.bsh_rawdata_uuid;
 catch
     R(53) = 0;
