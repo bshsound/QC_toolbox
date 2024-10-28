@@ -54,7 +54,11 @@ progressbar
 for kk = 1:length(flist)
     
     %% read timestamp from filename
-    ftime(kk) = datetime(flist(kk).name(5:end-4),'InputFormat','yyMMddHHmmss');
+    if flist(kk).name(1:3) == 'HSN'
+            ftime(kk) = datetime(flist(kk).name(6:end-4),'InputFormat','yyMMddHHmmss');
+    else
+            ftime(kk) = datetime(flist(kk).name(5:end-4),'InputFormat','yyMMddHHmmss');
+    end
     
     %% QC_01: Check if .wav file can be read by Matlab (audioread)
     
