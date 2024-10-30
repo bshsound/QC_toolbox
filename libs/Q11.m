@@ -4,9 +4,17 @@ function [flag] = Q11(filename,filename_bef,filename_aft,duration,interval,limit
 if interval ~= 0
     duration = interval;
 end
+
+% adapt to 4 digit prefix of HSN stations
+if filename(1:3) == 'HSN'
+    fns = 6;
+else
+    fns = 5;
+end
+
 if index == 1
-    t = datetime(filename(5:end-4),'InputFormat','yyMMddHHmmss');
-    t_after = datetime(filename_aft(5:end-4),'InputFormat','yyMMddHHmmss');
+    t = datetime(filename(fns:end-4),'InputFormat','yyMMddHHmmss');
+    t_after = datetime(filename_aft(fns:end-4),'InputFormat','yyMMddHHmmss');
     delta_t_after = abs(t_after-t);
     if delta_t_after > seconds(duration+limit) || delta_t_after < seconds(duration-limit)
         flag = 2;
@@ -14,8 +22,8 @@ if index == 1
         flag = 0;
     end
 elseif index == 2
-    t = datetime(filename(5:end-4),'InputFormat','yyMMddHHmmss');
-    t_bef = datetime(filename_bef(5:end-4),'InputFormat','yyMMddHHmmss');
+    t = datetime(filename(fns:end-4),'InputFormat','yyMMddHHmmss');
+    t_bef = datetime(filename_bef(fns:end-4),'InputFormat','yyMMddHHmmss');
     delta_t_bef = abs(t-t_bef);
     if delta_t_bef > seconds(duration+limit) || delta_t_bef < seconds(duration-limit)
         flag = 2;
@@ -23,9 +31,9 @@ elseif index == 2
         flag = 0;
     end
 elseif index == 3
-        t = datetime(filename(5:end-4),'InputFormat','yyMMddHHmmss');
-        t_bef = datetime(filename_bef(5:end-4),'InputFormat','yyMMddHHmmss');
-        t_after = datetime(filename_aft(5:end-4),'InputFormat','yyMMddHHmmss');
+        t = datetime(filename(fns:end-4),'InputFormat','yyMMddHHmmss');
+        t_bef = datetime(filename_bef(fns:end-4),'InputFormat','yyMMddHHmmss');
+        t_after = datetime(filename_aft(fns:end-4),'InputFormat','yyMMddHHmmss');
         delta_t_after = abs(t_after-t);
         delta_t_bef = abs(t-t_bef);
         if delta_t_bef > seconds(duration+limit) || delta_t_after > seconds(duration+limit) || delta_t_bef < seconds(duration-limit) || delta_t_after < seconds(duration-limit)
