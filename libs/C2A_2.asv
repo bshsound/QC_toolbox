@@ -1,0 +1,95 @@
+%% new function to call powershell script, that copies all relevant files
+% new script that is called when files with same filename were found
+% new files with same filename will be marked as filename(1).wav oder
+% filename(1).wavx etc.
+% no files are being overwritten or deleted
+
+function [TL] = C2A_2(sea,station,hydno,source,target,yy,mm,dd)
+tic
+%% write .ps1 script in Matlab
+source(source=='\')='/';
+target = 'Y:\Meereskunde\UWS\Dauer';
+target(target=='\')='/';
+fileID = fopen('temp.ps1','w');
+fprintf(fileID,['$Meer = "',sea, '/" \n']);
+fprintf(fileID,['$Station = "', station , '/" \n']);
+fprintf(fileID,['$Hydrophon = "', hydno , '/" \n']);
+fprintf(fileID,['$Ort = "', source , '" \n']);
+fprintf(fileID,['$Ziel = "', target ,'/" \n']);
+fprintf(fileID,'cd $Ort \n');
+fprintf(fileID,"$items = Get-ChildItem ('*.wav','*.wavx') \n");
+fprintf(fileID,'$totalFiles = $items.Count \n');
+fprintf(fileID,'$currentFileIndex = 0 \n');
+fprintf(fileID,'foreach ($item in $items) \n');
+fprintf(fileID,'{ \n');
+fprintf(fileID,'$currentFileIndex++ \n');
+fprintf(fileID,'$progressPercent = [math]::Round(($currentFileIndex / $totalFiles) * 100) \n');
+fprintf(fileID,'Write-Progress -Activity "Kopiere Dateien" -Status "Datei $currentFileIndex von $totalFiles: $($item.Name)" -PercentComplete $progressPercent \n');
+       fprintf(fileID,'Write-Host $item.Name \n');
+            fprintf(fileID,['$monat = $item.Name.Substring(',num2str(mm-1),',2)	 \n']);
+            fprintf(fileID,['$tag = $item.Name.Substring(',num2str(dd-1),',2) \n']);
+            fprintf(fileID,['$jahr = $item.Name.Substring(',num2str(yy-1),',2) \n']);
+            fprintf(fileID,'$Datei = $Ort + $item.Name \n');
+            fprintf(fileID,'$Zielordner = $Ziel + $Meer + $Station + $Hydrophon + "20" + $jahr + "/" + $monat + "/" + $tag + "/" \n');
+            fprintf(fileID,'Write-Host($Zielordner) \n');
+            fprintf(fileID,'if (!(Test-Path -path $Zielordner)) {New-Item $Zielordner -Type Directory} \n');
+            fprintf(fileID,'$zielDatei = Join-Path -Path $Zielordner -ChildPath $item.Name \n');
+            fprintf(fileID,'if (Test-Path -Path $zielDatei) { \n');
+            fprintf(fileID,'Write-Host "Datei $($item.Name) existiert bereits im Zielordner. Überspringe..." \n');
+            fprintf(fileID,'continue \n');
+            fprintf(fileID,' \n');
+            
+            
+            
+            fprintf(fileID,'$counter = 1 \n');
+            fprintf(fileID,'while (Test-Path -Path $zielDatei) { \n')
+            fprintf(fileID,'$filenameWithoutExt = [System.IO.Path]::GetFileNameWithoutExtension($item.Name) \n');
+            fprintf(fileID,'$extension = [System.IO.Path]::GetExtension($item.Name) \n');
+            fprintf(fileID,'$zielDatei = Join-Path -Path $Zielordner -ChildPath ("{0}({1}){2}" -f $filenameWithoutExt, $counter, $extension) \n');
+            fprintf(fileID,'$counter++ \n');
+            fprintf(fileID,'} \n');
+            fprintf(fileID,'Write-Host($zielDatei) \n');           
+            fprintf(fileID,'Copy-Item -Path $Datei -Destination $zielDatei -Force -Verbose \n');
+fprintf(fileID,'}  \n');
+
+fclose(fileID);
+
+
+%% executes powershell script
+! Powershell.exe -executionpolicy remotesigned -File  temp.ps1
+
+%% delete powershell script
+f=dir('*.ps1')
+delete(f.name)
+T=toc;
+
+
+%% Transferlog
+T = duration(0,0,T);
+jointdir = [dir([source '*.wav']); dir([source '*.wavx'])]; 
+startyy=str2num(jointdir(1).name(yy:yy+1)) +2000; 
+startmm=str2num(jointdir(1).name(mm:mm+1));
+startdd=str2num(jointdir(1).name(dd:dd+1));
+endyy=str2num(jointdir(end).name(yy:yy+1))+2000; 
+endmm=str2num(jointdir(end).name(mm:mm+1));
+enddd=str2num(jointdir(end).name(dd:dd+1));
+start = datetime(startyy,startmm,startdd);
+ende = datetime(endyy,endmm,enddd);
+
+path_out = ['X:\Meereskunde\Unterwasserschall\AMSO23\' sea '\' station '\QC\Transferlog\'] ;
+fp = fopen([path_out,'TransferLog_',datestr(start),'.csv'],'w');
+fprintf(fp, '%s\n','Transfer Logfile');
+fprintf(fp, '%s\n',['Transfer ended on ' datestr(datetime(now,'ConvertFrom','datenum')) ' UTC!']);
+fprintf(fp, '%s\n',['A total of ', num2str(length(jointdir)),' files were transferred!']);
+fprintf(fp, '%s\n',['From these files ' num2str(length(dir([source '*.wavx']))) ' were flagged as corrupted.']);
+fprintf(fp, '%s\n',['The transfer process took ', datestr(T,13)]);
+fprintf(fp, '%s\n',['Files were copied from ' source ' to ' target '.']);
+fprintf(fp, '%s\n',['Transferred files cover the period from ' datestr(start) ' to ' datestr(ende)]);
+fclose(fp)
+TL = [path_out,'TransferLog_',datestr(start),'.csv'];
+end
+
+
+
+
+

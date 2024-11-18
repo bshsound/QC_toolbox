@@ -1,0 +1,25 @@
+
+% function, that renames all wavs to BSH standard
+
+function umbenenner(path) 
+% flist = dir([path '*.wav']);
+% update 22.03.24 - accept also data truncated in subdirectories (Sylence)
+flist = dir(fullfile(path, '**\*.wavx'));  %get list of files and folders in any subfolder
+flist = flist(~[flist.isdir]); 
+disp('Renaming files ... ')
+for kk = 1:length(flist)
+oldname = flist(kk).name;
+% newname = [station '_' oldname(Jahr:Jahr+1) oldname(Monat:Monat+1) oldname(Tag:Tag+1) oldname(Stunde:Stunde+1) oldname(Minute:Minute+1) oldname(Sekunde:Sekunde+1) '.wav'];
+if oldname(end) == 'x'
+    newname = oldname(1:end-1);
+else
+    newname = oldname;
+end
+if ~isequal(oldname,newname)
+    movefile([flist(kk).folder '\' flist(kk).name],[path newname]);
+else
+    continue
+end
+end
+disp('DONE!')
+end
